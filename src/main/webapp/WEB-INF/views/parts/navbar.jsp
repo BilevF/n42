@@ -13,7 +13,7 @@
         </div>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="navbar-nav navbar-right">
                 <li class="nav-item active">
                     <a class="nav-link active" href="#">Sims</a>
                 </li>
@@ -27,7 +27,7 @@
                     </c:when>
                     <c:otherwise>
                         <li class="nav-item">
-                            <a class="nav-link" href="/">Logout</a>
+                            <a class="btn btn-primary btn-md" href="/logout">Logout</a>
                         </li>
                     </c:otherwise>
                 </c:choose>

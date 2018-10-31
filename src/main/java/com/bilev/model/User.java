@@ -1,31 +1,30 @@
 package com.bilev.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.bilev.model.enums.Role;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.NotEmpty;
 
 
 import java.sql.Date;
+import java.util.*;
 
 
 @Entity
 @Table(name="USER")
+@Inheritance
+@DiscriminatorColumn(name = "ROLE",
+        discriminatorType = DiscriminatorType.STRING)
 @Setter
 @Getter
-@EqualsAndHashCode
-public class User {
+@EqualsAndHashCode(callSuper = true)
+public class User extends AbstractPO {
 
-    @Id
-    @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "ROLE", insertable = false, updatable = false)
+    private String role;
 
     @Column(name = "FIRST_NAME")
     private String firstName;
@@ -47,4 +46,6 @@ public class User {
 
     @Column(name = "PASSWORD")
     private String password;
+
+    transient private String confirmPassword;
 }

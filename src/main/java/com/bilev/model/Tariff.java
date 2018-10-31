@@ -5,18 +5,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="TARIFF")
 @Setter
 @Getter
-@EqualsAndHashCode
-public class Tariff {
-
-    @Id
-    @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+@EqualsAndHashCode(callSuper = true)
+public class Tariff extends AbstractPO {
 
     @Column(name = "NAME")
     private String name;
@@ -27,7 +24,13 @@ public class Tariff {
     @Column(name = "INFO")
     private String info;
 
-    @Column(name = "PIC")
-    private String pic;
+    @OneToMany(mappedBy = "tariff")
+    private List<Contract> contracts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "tariff",
+            cascade = CascadeType.ALL
+    )
+    private List<Option> options = new ArrayList<>();
+
 
 }
