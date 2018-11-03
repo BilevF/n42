@@ -1,0 +1,33 @@
+package com.bilev.dao.impl;
+
+import com.bilev.dao.api.TariffDao;
+import com.bilev.model.Tariff;
+import org.hibernate.Criteria;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository("tariffDao")
+public class TariffDaoImpl extends AbstractDao<Integer, Tariff> implements TariffDao {
+    @Override
+    public void saveOrUpdate(Tariff tariff) {
+        super.saveOrUpdate(tariff);
+    }
+
+    @Override
+    public void remove(Tariff tariff) {
+        delete(tariff);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Tariff> getAllTariffs() {
+        Criteria criteria = createEntityCriteria();
+        return (List<Tariff>) criteria.list();
+    }
+
+    @Override
+    public Tariff findById(int id) {
+        return getByKey(id);
+    }
+}

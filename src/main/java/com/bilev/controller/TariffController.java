@@ -2,7 +2,7 @@ package com.bilev.controller;
 
 import com.bilev.model.Option;
 import com.bilev.model.Tariff;
-import com.bilev.service.TariffService;
+import com.bilev.service.api.TariffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

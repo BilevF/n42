@@ -2,15 +2,14 @@ package com.bilev.model;
 
 import javax.persistence.*;
 
-import com.bilev.model.enums.Role;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.NotEmpty;
 
 
 import java.sql.Date;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -21,10 +20,7 @@ import java.util.*;
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public class User extends AbstractPO {
-
-    @Column(name = "ROLE", insertable = false, updatable = false)
-    private String role;
+public class User extends AbstractModel {
 
     @Column(name = "FIRST_NAME")
     private String firstName;
@@ -47,5 +43,12 @@ public class User extends AbstractPO {
     @Column(name = "PASSWORD")
     private String password;
 
-    transient private String confirmPassword;
+    @OneToMany(mappedBy = "client",
+            cascade = CascadeType.ALL
+    )
+    private List<Contract> contracts = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "ROLE_ID")
+    private Role role;
 }

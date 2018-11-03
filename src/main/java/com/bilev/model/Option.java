@@ -1,6 +1,5 @@
 package com.bilev.model;
 
-import com.bilev.model.enums.OptionSelectedType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +13,7 @@ import java.util.List;
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public class Option extends AbstractPO {
+public class Option extends AbstractModel {
 
     @Column(name = "NAME")
     private String name;
@@ -33,16 +32,23 @@ public class Option extends AbstractPO {
     private Tariff tariff;
 
     @ManyToMany
+    @JoinTable(name = "CONTRACT_OPTIONS",
+            joinColumns = @JoinColumn(name = "OPTION_ID"),
+            inverseJoinColumns = @JoinColumn(name = "CONTRACT_ID")
+    )
+    private List<Contract> contracts = new ArrayList<>();
+
+    @ManyToMany
     @JoinTable(name = "REQUIRED_OPTIONS",
-            joinColumns = @JoinColumn(name = "FIRST_TARIFF_OPTION_ID"),
-            inverseJoinColumns = @JoinColumn(name = "SECOND_TARIFF_OPTION_ID")
+            joinColumns = @JoinColumn(name = "FIRST_OPTION_ID"),
+            inverseJoinColumns = @JoinColumn(name = "SECOND_OPTION_ID")
     )
     private List<Option> requiredOptions = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "INCOMPATIBLE_OPTIONS",
-            joinColumns = @JoinColumn(name = "FIRST_TARIFF_OPTION_ID"),
-            inverseJoinColumns = @JoinColumn(name = "SECOND_TARIFF_OPTION_ID")
+            joinColumns = @JoinColumn(name = "FIRST_OPTION_ID"),
+            inverseJoinColumns = @JoinColumn(name = "SECOND_OPTION_ID")
     )
     private List<Option> incompatibleOptions = new ArrayList<>();
 
@@ -50,18 +56,16 @@ public class Option extends AbstractPO {
 
     @ManyToMany
     @JoinTable(name = "REQUIRED_OPTIONS",
-            joinColumns = @JoinColumn(name = "SECOND_TARIFF_OPTION_ID"),
-            inverseJoinColumns = @JoinColumn(name = "FIRST_TARIFF_OPTION_ID")
+            joinColumns = @JoinColumn(name = "SECOND_OPTION_ID"),
+            inverseJoinColumns = @JoinColumn(name = "FIRST_OPTION_ID")
     )
     private List<Option> requiredOptionsOf = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "INCOMPATIBLE_OPTIONS",
-            joinColumns = @JoinColumn(name = "SECOND_TARIFF_OPTION_ID"),
-            inverseJoinColumns = @JoinColumn(name = "FIRST_TARIFF_OPTION_ID")
+            joinColumns = @JoinColumn(name = "SECOND_OPTION_ID"),
+            inverseJoinColumns = @JoinColumn(name = "FIRST_OPTION_ID")
     )
     private List<Option> incompatibleOptionsOf = new ArrayList<>();
-
-    transient private OptionSelectedType selectedType;
 
 }

@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public class Tariff extends AbstractPO {
+public class Tariff extends AbstractModel {
 
     @Column(name = "NAME")
     private String name;
@@ -23,6 +23,9 @@ public class Tariff extends AbstractPO {
 
     @Column(name = "INFO")
     private String info;
+
+    @Column(name = "VALID")
+    private Boolean valid;
 
     @OneToMany(mappedBy = "tariff")
     private List<Contract> contracts = new ArrayList<>();

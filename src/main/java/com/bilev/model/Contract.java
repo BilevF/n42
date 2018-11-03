@@ -1,6 +1,5 @@
 package com.bilev.model;
 
-import com.bilev.model.enums.Blocked;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +13,7 @@ import java.util.List;
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public class Contract extends AbstractPO {
+public class Contract extends AbstractModel {
 
     @Column(name = "PHONE_NUMBER")
     private String phoneNumber;
@@ -22,13 +21,13 @@ public class Contract extends AbstractPO {
     @Column(name = "BALANCE")
     private Double balance;
 
-    @Column(name = "BLOCKED")
-    @Enumerated(EnumType.STRING)
-    private Blocked blocked;
+    @ManyToOne
+    @JoinColumn(name = "BLOCK_ID")
+    private Block block;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
-    private Client client;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "TARIFF_ID")
