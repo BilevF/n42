@@ -1,5 +1,6 @@
 package com.bilev.configuration;
 
+import com.bilev.converter.BlockConverter;
 import com.bilev.converter.OptionSelectedTypeConverter;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
@@ -56,6 +57,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new OptionSelectedTypeConverter());
+        registry.addConverter(new BlockConverter());
     }
 
 }

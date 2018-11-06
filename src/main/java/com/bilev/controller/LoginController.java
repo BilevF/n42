@@ -1,6 +1,6 @@
 package com.bilev.controller;
 
-import com.bilev.model.User;
+import com.bilev.dto.UserDto;
 import com.bilev.service.api.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,8 +26,8 @@ public class LoginController {
     @RequestMapping(value = "/account", method = RequestMethod.GET)
     public String validateUsr(ModelMap model, Principal principal) {
 
-        User user = userService.findUser(principal.getName());
-        switch (user.getRole().getRoleName()) {
+        UserDto user = userService.getUserByEmail(principal.getName());
+        switch (user.getRoleRoleName()) {
             case ROLE_CLIENT:
                 model.addAttribute("client", user);
                 return "clientAccount";

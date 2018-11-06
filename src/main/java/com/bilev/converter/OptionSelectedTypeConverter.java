@@ -1,15 +1,15 @@
 package com.bilev.converter;
 
-import com.bilev.dto.SelectedOptionType;
+import com.bilev.dto.BasicOptionDto;
 import org.springframework.core.convert.converter.Converter;
 
-public class OptionSelectedTypeConverter implements Converter<String, SelectedOptionType> {
+public class OptionSelectedTypeConverter implements Converter<String, BasicOptionDto.SelectedOptionType> {
     @Override
-    public SelectedOptionType convert(String source) {
+    public BasicOptionDto.SelectedOptionType convert(String source) {
         try {
-            return SelectedOptionType.valueOf(source);
+            return BasicOptionDto.SelectedOptionType.valueOf(source);
         } catch(Exception e) {
-            return SelectedOptionType.NON; // or SortEnum.asc
+            return BasicOptionDto.SelectedOptionType.NON; // or SortEnum.asc
         }
     }
 }

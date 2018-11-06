@@ -3,16 +3,17 @@ package com.bilev.model;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="BLOCK")
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, of = {})
 public class Block extends AbstractModel {
 
     public enum BlockType {
@@ -23,6 +24,4 @@ public class Block extends AbstractModel {
     @Column(name = "TYPE")
     private BlockType blockType;
 
-    @OneToMany(mappedBy = "block")
-    private List<Contract> contracts = new ArrayList<>();
 }

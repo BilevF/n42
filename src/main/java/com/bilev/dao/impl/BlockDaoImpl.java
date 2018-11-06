@@ -7,11 +7,11 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 @Repository("blockDao")
-public class BlockDaoImpl extends AbstractDao<Integer, Block> implements BlockDao {
+public class BlockDaoImpl extends AbstractDaoImpl<Integer, Block> implements BlockDao {
     @Override
     public Block getBlockByType(Block.BlockType blockType) {
         Criteria criteria = createEntityCriteria();
-        criteria.add(Restrictions.eq("type", blockType.name()));
+        criteria.add(Restrictions.eq("blockType", blockType));
         return (Block) criteria.uniqueResult();
     }
 }

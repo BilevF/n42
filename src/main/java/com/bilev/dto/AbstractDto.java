@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(of = {"id"})
 public class AbstractDto {
     private Integer id;
 }

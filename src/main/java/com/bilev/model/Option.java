@@ -3,16 +3,18 @@ package com.bilev.model;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="TARIFF_OPTION")
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, of = {})
+@ToString(callSuper = true, exclude =  {"tariff", "requiredOptions", "incompatibleOptions", "requiredOptionsOf", "incompatibleOptionsOf"})
 public class Option extends AbstractModel {
 
     @Column(name = "NAME")
@@ -32,25 +34,18 @@ public class Option extends AbstractModel {
     private Tariff tariff;
 
     @ManyToMany
-    @JoinTable(name = "CONTRACT_OPTIONS",
-            joinColumns = @JoinColumn(name = "OPTION_ID"),
-            inverseJoinColumns = @JoinColumn(name = "CONTRACT_ID")
-    )
-    private List<Contract> contracts = new ArrayList<>();
-
-    @ManyToMany
     @JoinTable(name = "REQUIRED_OPTIONS",
             joinColumns = @JoinColumn(name = "FIRST_OPTION_ID"),
             inverseJoinColumns = @JoinColumn(name = "SECOND_OPTION_ID")
     )
-    private List<Option> requiredOptions = new ArrayList<>();
+    private Set<Option> requiredOptions = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "INCOMPATIBLE_OPTIONS",
             joinColumns = @JoinColumn(name = "FIRST_OPTION_ID"),
             inverseJoinColumns = @JoinColumn(name = "SECOND_OPTION_ID")
     )
-    private List<Option> incompatibleOptions = new ArrayList<>();
+    private Set<Option> incompatibleOptions = new HashSet<>();
 
     // Hibernate hack
 
@@ -59,13 +54,13 @@ public class Option extends AbstractModel {
             joinColumns = @JoinColumn(name = "SECOND_OPTION_ID"),
             inverseJoinColumns = @JoinColumn(name = "FIRST_OPTION_ID")
     )
-    private List<Option> requiredOptionsOf = new ArrayList<>();
+    private Set<Option> requiredOptionsOf = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "INCOMPATIBLE_OPTIONS",
             joinColumns = @JoinColumn(name = "SECOND_OPTION_ID"),
             inverseJoinColumns = @JoinColumn(name = "FIRST_OPTION_ID")
     )
-    private List<Option> incompatibleOptionsOf = new ArrayList<>();
+    private Set<Option> incompatibleOptionsOf = new HashSet<>();
 
 }

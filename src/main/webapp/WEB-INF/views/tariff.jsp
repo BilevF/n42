@@ -29,7 +29,7 @@
                 <div class="card-body">
                     <form action="/newOption">
                         <input name="tariffId" type="hidden" value="${tariff.id}">
-                        <input type="submit" class="form-control btn btn-success" value="Manage">
+                        <input type="submit" class="form-control btn btn-primary" value="Manage">
                     </form>
                 </div>
             </div>
@@ -42,9 +42,10 @@
                         <p class="card-text">Info: ${option.info}</p>
                         <form action="/removeOption" method="post">
                             <input name="optionId" type="hidden" value="${option.id}">
-                            <input type="submit" class="form-control btn btn-success" value="Remove">
+                            <input name="tariffId" type="hidden" value="${tariff.id}">
+                            <input type="submit" class="btn btn-primary" value="Remove">
                         </form>
-                        <a href="#" class="btn">Manage</a>
+                        <a href="#" class="btn btn-primary">Edit</a>
                     </div>
                 </div>
             </c:forEach>

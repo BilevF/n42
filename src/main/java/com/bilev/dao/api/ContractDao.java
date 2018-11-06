@@ -2,18 +2,11 @@ package com.bilev.dao.api;
 
 import com.bilev.model.Contract;
 
+import java.util.Collection;
 import java.util.List;
 
-public interface ContractDao {
+public interface ContractDao extends AbstractDao<Integer, Contract> {
     List<Contract> getUserContracts(int userId);
 
-    Contract findById(int id);
-
-    void saveOrUpdate(Contract contract);
-
-    void update(Contract contract);
-
-    void updateAll(List<Contract> contracts);
-
-
+    void updateAll(Collection<Contract> contracts);
 }

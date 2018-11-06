@@ -1,10 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: FedorBilev
-  Date: 10/30/2018
-  Time: 8:05 PM
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
@@ -38,47 +32,45 @@
                 <form:input type="text" path="info" class="form-control" id="option_info" placeholder="info"/>
             </div>
 
-            <form:input path="tariff.id" type="hidden" value="${option.tariff.id}"/>
-            <form:input path="tariff.info" type="hidden" value="${option.tariff.id}"/>
-            <form:input path="tariff.price" type="hidden" value="${option.tariff.id}"/>
-            <form:input path="tariff.name" type="hidden" value="${option.tariff.id}"/>
+            <form:input path="tariffId" type="hidden" value="${option.tariffId}"/>
 
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Connection price</th>
-                    <th scope="col">Info</th>
-                    <th scope="col">Option</th>
-                </tr>
-                </thead>
-                <tbody>
-                <c:forEach items="${option.tariff.options}" var="option" varStatus="i">
-                    <input name="tariff.options[${i.index}].id" type="hidden" value="${option.id}"/>
+            <c:if test = "${option.relatedOptions.size() != 0}">
+                <table class="table table-hover">
+                    <thead>
                     <tr>
-                        <td>${option.name}</td>
-                        <td>${option.price}</td>
-                        <td>${option.connectionPrice}</td>
-                        <td>${option.info}</td>
-                        <td>
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-secondary active">
-                                    <input type="radio" name="tariff.options[${i.index}].selectedType" value="NON" autocomplete="off" checked> Non
-                                </label>
-                                <label class="btn btn-secondary">
-                                    <input type="radio" name="tariff.options[${i.index}].selectedType" value="INCOMPATIBLE" autocomplete="off"> INCOMPATIBLE
-                                </label>
-                                <label class="btn btn-secondary">
-                                    <input type="radio" name="tariff.options[${i.index}].selectedType" value="REQUIRED" autocomplete="off"> REQUIRED
-                                </label>
-                            </div>
-                        </td>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Connection price</th>
+                        <th scope="col">Info</th>
+                        <th scope="col">Option</th>
                     </tr>
-                </c:forEach>
-                </tbody>
-            </table>
-
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${option.relatedOptions}" var="relatedOption" varStatus="i">
+                            <input name="relatedOptions[${i.index}].id" type="hidden" value="${relatedOption.id}"/>
+                            <tr>
+                                <td>${relatedOption.name}</td>
+                                <td>${relatedOption.price}</td>
+                                <td>${relatedOption.connectionPrice}</td>
+                                <td>${relatedOption.info}</td>
+                                <td>
+                                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                        <label class="btn btn-primary active">
+                                            <input type="radio" name="relatedOptions[${i.index}].selectedOptionType" value="NON" autocomplete="off" checked> Non
+                                        </label>
+                                        <label class="btn btn-primary">
+                                            <input type="radio" name="relatedOptions[${i.index}].selectedOptionType" value="INCOMPATIBLE" autocomplete="off"> INCOMPATIBLE
+                                        </label>
+                                        <label class="btn btn-primary">
+                                            <input type="radio" name="relatedOptions[${i.index}].selectedOptionType" value="REQUIRED" autocomplete="off"> REQUIRED
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </c:if>
             <button type="submit" class="btn btn-primary">Save option</button>
         </form:form>
     </div>

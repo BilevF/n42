@@ -1,0 +1,41 @@
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<html>
+<head>
+    <jsp:include page="parts/header.jsp"/>
+    <title>N42 Edit contract</title>
+</head>
+<body>
+
+    <jsp:include page="parts/navbar.jsp"/>
+    <div class="container">
+        <form:form action="/addContract" method="post" modelAttribute="contract">
+
+            <input name="balance" type="hidden" value="${contract.balance}">
+            <input name="userId" type="hidden" value="${contract.userId}">
+            <input name="id" type="hidden" value="${contract.id}">
+            <input name="blockType" type="hidden" value="${contract.blockType}">
+
+            <div class="form-group">
+                <form:label for="phoneNumber" path="phoneNumber">Phone number</form:label>
+                <form:input type="text" path="phoneNumber" class="form-control" id="phoneNumber"/>
+            </div>
+
+            <div class="form-group">
+                <label for="sel1">Select tariff:</label>
+                <select class="form-control" id="sel1" name="tariff.id">
+                    <c:forEach items="${tariffs}" var="tariff">
+                        <option value="${tariff.id}">${tariff.name}</option>
+                    </c:forEach>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save contract</button>
+        </form:form>
+    </div>
+    <jsp:include page="parts/footer.jsp"/>
+
+</body>
+</html>

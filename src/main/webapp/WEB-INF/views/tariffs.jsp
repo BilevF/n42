@@ -1,10 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: FedorBilev
-  Date: 10/28/2018
-  Time: 8:07 PM
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <html>
@@ -26,7 +20,7 @@
                         <p class="card-text">${tariff.info}</p>
                         <form action="/tariff">
                             <input name="tariffId" type="hidden" value="${tariff.id}">
-                            <input type="submit" class="form-control btn btn-success" value="Manage">
+                            <input type="submit" class="form-control btn btn-primary" value="Manage">
                         </form>
                     </div>
                 </div>

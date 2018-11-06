@@ -10,21 +10,16 @@ import org.springframework.stereotype.Component;
 public class LoggerAspect {
     private static final Logger LOG = Logger.getLogger(LoggerAspect.class);
 
-    @Before("execution(* com.bilev..*())")
-    public void logBefore(JoinPoint joinPoint) {
-
-        String methodName = joinPoint.getSignature().getName();
-
-        LOG.debug("Call method " + methodName);
-    }
 
     @Before("execution(* com.bilev..*(..))")
     public void logBeforeWithArgs(JoinPoint joinPoint) {
 
         String methodName = joinPoint.getSignature().getName();
-        Object[] methodArgs = joinPoint.getArgs();
 
-        LOG.debug("Call method " + methodName + " with args " + methodArgs);
+        LOG.debug("Call method " + methodName + " with args: ");
+
+        for (Object methodArgs : joinPoint.getArgs())
+            LOG.debug(methodArgs.toString());
     }
 
     @AfterReturning(
@@ -33,7 +28,10 @@ public class LoggerAspect {
     public void logAfterReturning(JoinPoint joinPoint, Object result) {
 
         LOG.debug("Method : " + joinPoint.getSignature().getName());
-        LOG.debug("Returned value is : " + result);
+        if (result != null)
+            LOG.debug("Returned value is : " + result.toString());
+        else
+            LOG.debug("Returned value is : null");
     }
 
     @After("execution(void com.bilev..*(..))")

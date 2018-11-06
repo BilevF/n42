@@ -1,6 +1,7 @@
 package com.bilev.dao.impl;
 
 import com.bilev.dao.api.UserDao;
+import com.bilev.model.Role;
 import com.bilev.model.User;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
@@ -9,24 +10,25 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository("userDao")
-public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
+public class UserDaoImpl extends AbstractDaoImpl<Integer, User> implements UserDao {
 
     @Override
-    public User find(String email) {
+    public User findByEmail(String email) {
         Criteria criteria = createEntityCriteria();
         criteria.add(Restrictions.eq("email", email));
         return (User) criteria.uniqueResult();
     }
 
-    @Override
-    public User findById(int id) {
-        return getByKey(id);
-    }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<User> getAllUsers() {
         Criteria criteria = createEntityCriteria();
+
+        criteria
+                .createAlias("role", "role")
+                .add(Restrictions.eq("role.roleName", Role.RoleName.ROLE_CLIENT));
         return (List<User>) criteria.list();
     }
+
 }

@@ -2,15 +2,11 @@ package com.bilev.dao.api;
 
 import com.bilev.model.Option;
 
+import java.util.Collection;
 import java.util.List;
 
-public interface OptionDao {
-    void saveOrUpdate(Option option);
+public interface OptionDao extends AbstractDao<Integer, Option> {
 
-    void remove(Option option);
-
-    void removeAll(List<Option> options);
-
-    Option findById(int id);
+    void removeAll(Collection<Option> options);
 
 }

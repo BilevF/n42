@@ -5,21 +5,20 @@ import javax.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
 @Table(name="USER")
-@Inheritance
-@DiscriminatorColumn(name = "ROLE",
-        discriminatorType = DiscriminatorType.STRING)
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, of = {})
+@ToString(callSuper = true, exclude =  {"contracts", "role"})
 public class User extends AbstractModel {
 
     @Column(name = "FIRST_NAME")
@@ -28,6 +27,7 @@ public class User extends AbstractModel {
     @Column(name = "LAST_NAME")
     private String lastName;
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "BIRTH_DATE")
     private Date birthDate;
 
@@ -43,12 +43,11 @@ public class User extends AbstractModel {
     @Column(name = "PASSWORD")
     private String password;
 
-    @OneToMany(mappedBy = "client",
-            cascade = CascadeType.ALL
-    )
-    private List<Contract> contracts = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private Set<Contract> contracts = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "ROLE_ID")
     private Role role;
+
 }

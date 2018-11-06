@@ -8,16 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository("tariffDao")
-public class TariffDaoImpl extends AbstractDao<Integer, Tariff> implements TariffDao {
-    @Override
-    public void saveOrUpdate(Tariff tariff) {
-        super.saveOrUpdate(tariff);
-    }
-
-    @Override
-    public void remove(Tariff tariff) {
-        delete(tariff);
-    }
+public class TariffDaoImpl extends AbstractDaoImpl<Integer, Tariff> implements TariffDao {
 
     @Override
     @SuppressWarnings("unchecked")
@@ -26,8 +17,4 @@ public class TariffDaoImpl extends AbstractDao<Integer, Tariff> implements Tarif
         return (List<Tariff>) criteria.list();
     }
 
-    @Override
-    public Tariff findById(int id) {
-        return getByKey(id);
-    }
 }

@@ -3,16 +3,18 @@ package com.bilev.model;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="TARIFF")
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, of = {})
+@ToString(callSuper = true, exclude =  {"contracts", "options"})
 public class Tariff extends AbstractModel {
 
     @Column(name = "NAME")
@@ -28,12 +30,10 @@ public class Tariff extends AbstractModel {
     private Boolean valid;
 
     @OneToMany(mappedBy = "tariff")
-    private List<Contract> contracts = new ArrayList<>();
+    private Set<Contract> contracts = new HashSet<>();
 
-    @OneToMany(mappedBy = "tariff",
-            cascade = CascadeType.ALL
-    )
-    private List<Option> options = new ArrayList<>();
+    @OneToMany(mappedBy = "tariff")
+    private Set<Option> options = new HashSet<>();
 
 
 }

@@ -9,12 +9,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractDao<PK extends Serializable, T> {
+public abstract class AbstractDaoImpl<PK extends Serializable, T> {
 
     private final Class<T> persistentClass;
 
     @SuppressWarnings("unchecked")
-    public AbstractDao(){
+    public AbstractDaoImpl(){
         this.persistentClass =(Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
     }
 
@@ -32,6 +32,10 @@ public abstract class AbstractDao<PK extends Serializable, T> {
 
     public void persist(T entity) {
         getSession().persist(entity);
+    }
+
+    public void save(T entity)  {
+        getSession().save(entity);
     }
 
     public void saveOrUpdate(T entity) {

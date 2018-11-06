@@ -3,16 +3,18 @@ package com.bilev.model;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="ROLE")
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, of = {})
+@ToString(callSuper = true, exclude =  {"users"})
 public class Role extends AbstractModel {
 
     public enum RoleName {
@@ -24,5 +26,5 @@ public class Role extends AbstractModel {
     private RoleName roleName;
 
     @OneToMany(mappedBy = "role")
-    private List<User> users = new ArrayList<>();
+    private Set<User> users = new HashSet<>();
 }

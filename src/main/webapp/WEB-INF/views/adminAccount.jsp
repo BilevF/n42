@@ -38,8 +38,8 @@
                                 </span>
                             </div>
                         </form>
-                        <a href="#" class="btn btn-primary btn-mg" style="margin-top: 12px">Create new</a>
-                        <a href="#" class="btn btn-light btn-mg" style="margin-top: 12px">Show all</a>
+                        <a href="/newUser" class="btn btn-primary btn-mg" style="margin-top: 12px">Create new</a>
+                        <a href="/allUser" class="btn btn-light btn-mg" style="margin-top: 12px">Show all</a>
                         <hr class="my-4">
                         <h4>Manage tariffs</h4>
                         <form>

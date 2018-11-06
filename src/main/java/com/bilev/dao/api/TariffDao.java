@@ -4,11 +4,8 @@ import com.bilev.model.Tariff;
 
 import java.util.List;
 
-public interface TariffDao {
-    void saveOrUpdate(Tariff tariff);
-
-    void remove(Tariff tariff);
+public interface TariffDao extends AbstractDao<Integer, Tariff> {
 
     List<Tariff> getAllTariffs();
-    Tariff findById(int id);
+
 }

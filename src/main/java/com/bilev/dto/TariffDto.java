@@ -4,14 +4,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true)
-public class TariffDto extends AbstractDto {
+@EqualsAndHashCode(callSuper = true, of = {})
+public class TariffDto extends BasicTariffDto {
 
-    private String name;
-
-    private Double price;
-
-    private String info;
+    private Set<BasicOptionDto> options = new HashSet<>();
 }

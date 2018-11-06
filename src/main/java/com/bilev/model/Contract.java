@@ -3,16 +3,18 @@ package com.bilev.model;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="CONTRACT")
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, of = {})
+@ToString(callSuper = true, exclude =  {"user", "tariff", "options", "basket", "histories"})
 public class Contract extends AbstractModel {
 
     @Column(name = "PHONE_NUMBER")
@@ -38,6 +40,16 @@ public class Contract extends AbstractModel {
             joinColumns = @JoinColumn(name = "CONTRACT_ID"),
             inverseJoinColumns = @JoinColumn(name = "OPTION_ID")
     )
-    private List<Option> options = new ArrayList<>();
+    private Set<Option> options = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "BASKET",
+            joinColumns = @JoinColumn(name = "CONTRACT_ID"),
+            inverseJoinColumns = @JoinColumn(name = "OPTION_ID")
+    )
+    private Set<Option> basket = new HashSet<>();
+
+    @OneToMany(mappedBy = "contract")
+    private Set<History> histories = new HashSet<>();
 
 }

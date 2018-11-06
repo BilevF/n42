@@ -19,11 +19,11 @@ VALUES ('Fedor', 'Bilev', '1996-03-16', '4016', 'Russia, Spb', 'client', '356a19
 INSERT INTO USER (FIRST_NAME, LAST_NAME, BIRTH_DATE, PASSPORT, ADDRESS, EMAIL, PASSWORD, ROLE_ID) 
 VALUES ('Fedor', 'Bilev', '1996-03-16', '4016', 'Russia, Spb', 'admin', '356a192b7913b04c54574d18c28d46e6395428ab', 2);
 
-INSERT INTO TARIFF (NAME, PRICE, INFO) 
-VALUES ('Black', '100', '3Gb/month, 100min/month, 100sms/month ');
+INSERT INTO TARIFF (NAME, PRICE, INFO, VALID) 
+VALUES ('Black', '100', '3Gb/month, 100min/month, 100sms/month ', true);
 
-INSERT INTO TARIFF (NAME, PRICE, INFO) 
-VALUES ('White', '200', '10Gb/month, 300min/month, 300sms/month ');
+INSERT INTO TARIFF (NAME, PRICE, INFO, VALID) 
+VALUES ('White', '200', '10Gb/month, 300min/month, 300sms/month ', true);
 
 INSERT INTO CONTRACT (USER_ID, TARIFF_ID, PHONE_NUMBER, BALANCE, BLOCK_ID)
 VALUES ('1', '2', '895014', '300', 1);

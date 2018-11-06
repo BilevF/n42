@@ -4,11 +4,10 @@ import com.bilev.model.User;
 
 import java.util.List;
 
-public interface UserDao {
+public interface UserDao extends AbstractDao<Integer, User> {
 
-    User find(String email);
-
-    User findById(int id);
+    User findByEmail(String email);
 
     List<User> getAllUsers();
+
 }

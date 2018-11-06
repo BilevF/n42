@@ -1,26 +1,18 @@
 package com.bilev.dto;
 
-import com.bilev.model.Block;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true)
-public class ContractDto extends AbstractDto {
+@EqualsAndHashCode(callSuper = true, of = {})
+public class ContractDto extends BasicContractDto {
 
-    private String phoneNumber;
+    private Set<BasicOptionDto> options = new HashSet<>();
 
-    private Double balance;
-
-    private Block.BlockType blockType;
-
-    private Integer userID;
-
-    private TariffDto tariffDto;
-
-    private List<BasicOptionDto> options;
+    private Set<BasicOptionDto> basket = new HashSet<>();
 }
