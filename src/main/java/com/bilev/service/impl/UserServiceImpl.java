@@ -8,6 +8,8 @@ import com.bilev.dto.BasicContractDto;
 import com.bilev.dto.BasicUserDto;
 import com.bilev.dto.ContractDto;
 import com.bilev.dto.UserDto;
+import com.bilev.exception.NotFoundException;
+import com.bilev.exception.UnableToSaveException;
 import com.bilev.model.*;
 import com.bilev.service.api.UserService;
 import org.modelmapper.ModelMapper;
@@ -44,16 +46,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserDto getUserByEmail(String email) {
+    public UserDto getUserByEmail(String email) throws NotFoundException {
         User user = userDao.findByEmail(email);
         return modelMapper.map(user, UserDto.class);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public UserDto getUserById(int userId) {
-        User user = userDao.getByKey(userId);
-        return modelMapper.map(user, UserDto.class);
+    public UserDto getUserById(int userId) throws NotFoundException {
+        try {
+            User user = user = userDao.getByKey(userId);
+            return modelMapper.map(user, UserDto.class);
+        } catch (NotFoundException e) {
+            throw new NotFoundException("User not found", e);
+        }
+
     }
 
     @Override
@@ -65,8 +72,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
-    public int saveUser(BasicUserDto basicUserDto) {
+    @Transactional(rollbackFor=Exception.class)
+    public int saveUser(BasicUserDto basicUserDto) throws UnableToSaveException {
         User user = modelMapper.map(basicUserDto, User.class);
 
         if (user.getRole() == null) {
@@ -75,20 +82,28 @@ public class UserServiceImpl implements UserService {
 
         user.setPassword(passwordEncoder.encodePassword(user.getPassword(), null));
 
-        userDao.saveOrUpdate(user);
+        try {
+            userDao.saveOrUpdate(user);
+        } catch (UnableToSaveException e) {
+            throw new UnableToSaveException("Email is not unique / fields are empty", e);
+        }
 
         return  user.getId();
     }
 
     @Override
-    @Transactional
-    public int saveContract(BasicContractDto contractDto) {
+    @Transactional(rollbackFor=Exception.class)
+    public int saveContract(BasicContractDto contractDto) throws UnableToSaveException {
         Contract contract = modelMapper.map(contractDto, Contract.class);
 
         if (contract.getBalance() == null) contract.setBalance(0.0);
         if (contract.getBlock() == null) contract.setBlock(blockDao.getBlockByType(Block.BlockType.NON));
 
-        contractDao.saveOrUpdate(contract);
+        try {
+            contractDao.saveOrUpdate(contract);
+        } catch (UnableToSaveException e) {
+            throw new UnableToSaveException("Phone number is not unique / fields are empty", e);
+        }
 
         return contract.getId();
     }

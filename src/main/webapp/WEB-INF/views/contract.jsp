@@ -1,119 +1,142 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html>
 <head>
     <jsp:include page="parts/header.jsp"/>
     <title>N42 Contract</title>
 </head>
-<body>
+<body class="bg-light">
 
     <jsp:include page="parts/navbar.jsp"/>
-    <div class="container">
 
-        <jsp:include page="parts/welcom.jsp">
-            <jsp:param name="name" value="Phone number: ${contract.phoneNumber}"/>
-            <jsp:param name="massage" value="Tariff: ${contract.tariff.name}. Balance: ${contract.balance}."/>
-        </jsp:include>
+    <jsp:include page="parts/welcom.jsp">
+        <jsp:param name="name" value="Phone number: ${contract.phoneNumber}"/>
+        <jsp:param name="secondName" value="Balance: ${contract.balance}"/>
+        <jsp:param name="massage" value="<p>Welcome to the home page of contract management</p>"/>
 
-        <div class="card-columns">
+    </jsp:include>
 
-            <div class="card text-center bg-light border-light mb-3">
-                <div class="card-header"><h4><b>New contract</b></h4></div>
-                <div class="card-body">
-                    <form action="/newContract">
-                        <input name="userId" type="hidden" value="${client.id}">
-                        <input type="submit" class="btn btn-primary" value="Add">
-                    </form>
-                </div>
+    <div class="container" style="max-width: 960px;">
+
+        <c:if test="${not empty exception}">
+            <div class="alert alert-danger" role="alert">
+                    ${exception}
             </div>
-
-            <c:forEach items="${client.contracts}" var="contract">
-                <div class="card text-center bg-light border-light mb-3">
-                    <div class="card-header"><h4><b>${contract.phoneNumber}</b></h4></div>
-                    <div class="card-body">
-                        <p class="card-text"><b>${contract.tariff.name}</b></p>
-                        <p class="card-text">${contract.tariff.info}</p>
-                        <p class="card-text">Balance: ${contract.balance}</p>
-                        <form action="/contract">
-                            <input name="contractId" type="hidden" value="${contract.id}">
-                            <input type="submit" class="btn btn-primary" value="Manage">
-                        </form>
-                    </div>
-                </div>
-            </c:forEach>
-
-        </div>
-
-        <c:if test = "${contract.basket != null && contract.basket.size() > 0}">
-
-            <div class="alert alert-dark" role="alert">
-                Basket with ${contract.basket.size()} elements
-            </div>
-
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Info</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Connection price</th>
-                    <th scope="col"> </th>
-                </tr>
-                </thead>
-                <tbody>
-                <c:forEach items="${contract.basket}" var="option">
-                    <tr>
-                        <td>${option.name}</td>
-                        <td>${option.info}</td>
-                        <td>${option.price}</td>
-                        <td>${option.connectionPrice}</td>
-                        <td>
-                            <form action="/removeFromBasket">
-                                <input name="contractId" type="hidden" value="${contract.id}">
-                                <input name="optionId" type="hidden" value="${option.id}">
-                                <input type="submit" class="form-control btn btn-primary" value="Remove">
-                            </form>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
-
         </c:if>
 
-        <div class="alert alert-dark" role="alert">
-            Available Options
+        <jsp:include page="parts/separator.jsp">
+            <jsp:param name="name" value="Contract info"/>
+        </jsp:include>
+
+        <sec:authorize access="hasRole('ROLE_ADMIN')">
+            <c:set var="showBtn" value="${true}"/>
+        </sec:authorize>
+        <sec:authorize access="hasRole('ROLE_CLIENT')">
+            <c:set var="showBtn" value="${contract.blockType != 'ADMIN_BLOCK'}"/>
+        </sec:authorize>
+
+        <c:choose>
+            <c:when test="${contract.blockType == 'NON'}">
+                <c:set var="activeStatus" value="Active"/>
+                <c:set var="activeBtn" value="Block"/>
+                <c:set var="activeStyle" value="color: green;"/>
+            </c:when>
+            <c:otherwise>
+                <c:set var="activeStatus" value="Blocked"/>
+                <c:set var="activeBtn" value="Activete"/>
+                <c:set var="activeStyle" value="color: red;"/>
+            </c:otherwise>
+        </c:choose>
+
+        <jsp:include page="parts/info.jsp">
+            <jsp:param name="imgPath" value="/resources/images/user.png"/>
+
+            <jsp:param name="name1" value="Tariff"/>
+            <jsp:param name="name2" value="Info"/>
+            <jsp:param name="name3" value="Price"/>
+            <jsp:param name="name4" value="Contract"/>
+
+            <jsp:param name="value1" value="${contract.tariff.name}"/>
+            <jsp:param name="value2" value="${contract.tariff.info}"/>
+            <jsp:param name="value3" value="$${contract.tariff.price} <small class='text-muted'>/ mo</small>"/>
+            <jsp:param name="value4" value="${activeStatus}"/>
+            <jsp:param name="value4Style" value="${activeStyle}"/>
+
+            <jsp:param name="showBtn1" value="${contract.blockType == 'NON'}"/>
+            <jsp:param name="btn1Path" value="/selectTariff"/>
+            <jsp:param name="btn1HiddenName" value="contractId"/>
+            <jsp:param name="btn1HiddenValue" value="${contract.id}"/>
+            <jsp:param name="btn1Name" value="Change tariff"/>
+            <jsp:param name="btn1Method" value="get"/>
+
+            <jsp:param name="showBtn2" value="${contract.blockType == 'NON'}"/>
+            <jsp:param name="btn2Path" value="#"/>
+            <jsp:param name="btn2HiddenName" value="contractId"/>
+            <jsp:param name="btn2HiddenValue" value="${contract.id}"/>
+            <jsp:param name="btn2Name" value="Add money"/>
+            <jsp:param name="btn2Method" value="get"/>
+
+            <jsp:param name="showBtn3" value="${contract.histories.size() != 0}"/>
+            <jsp:param name="btn3Path" value="/history"/>
+            <jsp:param name="btn3HiddenName" value="contractId"/>
+            <jsp:param name="btn3HiddenValue" value="${contract.id}"/>
+            <jsp:param name="btn3Name" value="History"/>
+            <jsp:param name="btn3Method" value="get"/>
+
+            <jsp:param name="showBtn4" value="${showBtn}"/>
+            <jsp:param name="btn4Path" value="/changeContractStatus"/>
+            <jsp:param name="btn4HiddenName" value="contractId"/>
+            <jsp:param name="btn4HiddenValue" value="${contract.id}"/>
+            <jsp:param name="btn4Name" value="${activeBtn}"/>
+            <jsp:param name="btn4Method" value="post"/>
+        </jsp:include>
+
+        <br>
+
+        <c:if test="${contract.blockType == 'NON'}">
+
+        <jsp:include page="parts/separator.jsp">
+            <jsp:param name="name" value="Contract options"/>
+        </jsp:include>
+
+        <div class="card-columns mb-3 text-center">
+
+            <jsp:include page="parts/basicCard.jsp">
+                <jsp:param name="title" value="New option"/>
+                <jsp:param name="body" value="<ul class='list-unstyled mt-3 mb-4'>
+                        <li>Explore new options</li>
+                        <li>Make the contract</li>
+                        <li>more convenient for you!</li>
+                    </ul>"/>
+                <jsp:param name="path" value="/addNewOption"/>
+                <jsp:param name="method" value="get"/>
+                <jsp:param name="hiddenName1" value="contractId"/>
+                <jsp:param name="hiddenValue1" value="${contract.id}"/>
+                <jsp:param name="hiddenName2" value=""/>
+                <jsp:param name="hiddenValue2" value=""/>
+                <jsp:param name="btnName" value="Add"/>
+            </jsp:include>
+
+            <c:forEach items="${contract.options}" var="option">
+                <jsp:include page="parts/priceCard.jsp">
+                    <jsp:param name="title" value="${option.name}"/>
+                    <jsp:param name="price" value="${option.price}"/>
+                    <jsp:param name="info" value="<p class='card-text'>${option.info}</p>"/>
+                    <jsp:param name="path" value="#"/>
+                    <jsp:param name="method" value="post"/>
+                    <jsp:param name="hiddenName1" value="contractId"/>
+                    <jsp:param name="hiddenValue1" value="${contract.id}"/>
+                    <jsp:param name="hiddenName2" value="optionId"/>
+                    <jsp:param name="hiddenValue2" value="${option.id}"/>
+                    <jsp:param name="btnName" value="Remove"/>
+                    <jsp:param name="btnStyle" value="btn-link"/>
+                </jsp:include>
+            </c:forEach>
         </div>
 
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Info</th>
-                <th scope="col">Price</th>
-                <th scope="col">Connection price</th>
-                <th scope="col"> </th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:forEach items="${availableOptions}" var="option">
-                <tr>
-                    <td>${option.name}</td>
-                    <td>${option.info}</td>
-                    <td>${option.price}</td>
-                    <td>${option.connectionPrice}</td>
-                    <td>
-                        <form action="/removeFromBasket">
-                            <input name="contractId" type="hidden" value="${contract.id}">
-                            <input name="optionId" type="hidden" value="${option.id}">
-                            <input type="submit" class="form-control btn btn-primary" value="Add">
-                        </form>
-                    </td>
-                </tr>
-            </c:forEach>
-            </tbody>
-        </table>
+        </c:if>
 
     </div>
     <jsp:include page="parts/footer.jsp"/>

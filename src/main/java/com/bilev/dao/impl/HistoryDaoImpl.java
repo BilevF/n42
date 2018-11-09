@@ -13,9 +13,10 @@ public class HistoryDaoImpl extends AbstractDaoImpl<Integer, History> implements
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<History> getUserHistory(int userId) {
+    public List<History> getContractHistory(int contractId) {
         Criteria criteria = createEntityCriteria();
-        criteria.add(Restrictions.eq("user.Id", userId));
+        criteria.createAlias("contract", "contract")
+                .add(Restrictions.eq("contract.id", contractId));
         return (List<History>) criteria.list();
     }
 

@@ -6,10 +6,17 @@
     <jsp:include page="parts/header.jsp"/>
     <title>N42 Users</title>
 </head>
-<body>
+<body class="bg-light">
 
     <jsp:include page="parts/navbar.jsp"/>
-    <div class="container">
+    <div class="container" style="max-width: 960px;">
+
+        <c:if test="${not empty exception}">
+            <div class="alert alert-danger" role="alert">
+                    ${exception}
+            </div>
+        </c:if>
+
         <table class="table table-hover">
             <thead>
             <tr>
@@ -22,7 +29,6 @@
             </thead>
             <tbody>
             <c:forEach items="${users}" var="user">
-                <input name="relatedOptions[${i.index}].id" type="hidden" value="${relatedOption.id}"/>
                 <tr>
                     <td>${user.firstName}</td>
                     <td>${user.lastName}</td>

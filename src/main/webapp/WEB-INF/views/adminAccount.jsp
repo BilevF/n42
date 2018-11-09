@@ -6,17 +6,53 @@
     <jsp:include page="parts/header.jsp"/>
     <title>N42 Admin account</title>
 </head>
-<body>
+<body class="bg-light">
 
     <jsp:include page="parts/navbar.jsp"/>
 
-    <div class="container ">
+    <jsp:include page="parts/welcom.jsp">
+        <jsp:param name="name" value="Hello, ${admin.firstName} ${admin.lastName}!"/>
+        <jsp:param name="massage" value="<p>Welcome to the admin's home page</p>"/>
+        <jsp:param name="secondName" value=""/>
+    </jsp:include>
 
-        <jsp:include page="parts/welcom.jsp">
-            <jsp:param name="name" value="Hello, ${admin.firstName} ${admin.lastName}!"/>
-            <jsp:param name="massage" value="Birth date: ${admin.birthDate}. Address: ${admin.address}. Email: ${admin.email}"/>
+    <div class="container" style="max-width: 960px;">
+
+        <c:if test="${not empty exception}">
+            <div class="alert alert-danger" role="alert">
+                ${exception}
+            </div>
+        </c:if>
+
+        <jsp:include page="parts/separator.jsp">
+            <jsp:param name="name" value="Admin info"/>
         </jsp:include>
 
+        <jsp:include page="parts/info.jsp">
+            <jsp:param name="imgPath" value="/resources/images/client2.png"/>
+
+            <jsp:param name="name1" value="Email"/>
+            <jsp:param name="name2" value="Birth date"/>
+            <jsp:param name="name3" value="Passport"/>
+            <jsp:param name="name4" value="Address"/>
+
+            <jsp:param name="value1" value="${admin.email}"/>
+            <jsp:param name="value2" value="${admin.birthDate}"/>
+            <jsp:param name="value3" value="${admin.passport}"/>
+            <jsp:param name="value4" value="${admin.address}"/>
+            <jsp:param name="value4Style" value=""/>
+
+            <jsp:param name="showBtn1" value="${false}"/>
+            <jsp:param name="btn1Path" value="#"/>
+            <jsp:param name="btn1HiddenName" value="userId"/>
+            <jsp:param name="btn1HiddenValue" value="${admin.id}"/>
+            <jsp:param name="btn1Name" value="Edit"/>
+            <jsp:param name="btn1Method" value="get"/>
+
+            <jsp:param name="showBtn3" value="${false}"/>
+            <jsp:param name="showBtn2" value="${false}"/>
+            <jsp:param name="showBtn4" value="${false}"/>
+        </jsp:include>
 
 
         <div class="card">
@@ -57,13 +93,6 @@
                 </div>
             </div>
         </div>
-
-        <%--<jsp:include page="parts/findUser.jsp"/>--%>
-
-        <%--<br>--%>
-
-        <%--<jsp:include page="parts/findTariff.jsp"/>--%>
-
 
 
     </div>

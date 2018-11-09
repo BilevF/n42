@@ -1,6 +1,7 @@
 package com.bilev.dao.impl;
 
 import com.bilev.dao.api.UserDao;
+import com.bilev.exception.NotFoundException;
 import com.bilev.model.Role;
 import com.bilev.model.User;
 import org.hibernate.Criteria;
@@ -13,10 +14,12 @@ import java.util.List;
 public class UserDaoImpl extends AbstractDaoImpl<Integer, User> implements UserDao {
 
     @Override
-    public User findByEmail(String email) {
+    public User findByEmail(String email) throws NotFoundException {
         Criteria criteria = createEntityCriteria();
         criteria.add(Restrictions.eq("email", email));
-        return (User) criteria.uniqueResult();
+        User user = (User) criteria.uniqueResult();
+        if (user == null) throw new NotFoundException("User not found");
+        return user;
     }
 
 

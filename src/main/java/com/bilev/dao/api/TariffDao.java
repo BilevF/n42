@@ -8,4 +8,6 @@ public interface TariffDao extends AbstractDao<Integer, Tariff> {
 
     List<Tariff> getAllTariffs();
 
+    List<Tariff> getAvailableTariffs();
+
 }

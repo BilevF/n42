@@ -6,7 +6,7 @@
     <jsp:include page="parts/header.jsp"/>
     <title>N42 Mobile</title>
 </head>
-<body>
+<body class="bg-light">
     <jsp:include page="parts/navbar.jsp"/>
 
     <jsp:include page="parts/footer.jsp"/>

@@ -4,19 +4,21 @@ import com.bilev.dto.BasicContractDto;
 import com.bilev.dto.BasicUserDto;
 import com.bilev.dto.ContractDto;
 import com.bilev.dto.UserDto;
+import com.bilev.exception.NotFoundException;
+import com.bilev.exception.UnableToSaveException;
 import com.bilev.model.User;
 
 import java.util.List;
 
 public interface UserService {
-    UserDto getUserByEmail(String email);
+    UserDto getUserByEmail(String email) throws NotFoundException;
 
-    UserDto getUserById(int userId);
+    UserDto getUserById(int userId) throws NotFoundException;
 
     List<BasicUserDto> getAllUsers();
 
-    int saveUser(BasicUserDto basicUserDto);
+    int saveUser(BasicUserDto basicUserDto) throws UnableToSaveException;
 
-    int saveContract(BasicContractDto contractDto);
+    int saveContract(BasicContractDto contractDto) throws UnableToSaveException;
 
 }

@@ -6,24 +6,39 @@
     <jsp:include page="parts/header.jsp"/>
     <title>N42 Tariffs</title>
 </head>
-<body>
+<body class="bg-light">
     <jsp:include page="parts/navbar.jsp"/>
-    <div class="container">
 
-        <div class="card-columns">
+    <jsp:include page="parts/welcom.jsp">
+        <jsp:param name="name" value="${title}"/>
+        <jsp:param name="massage" value="<p>Welcome to the tariff's home page</p>"/>
+        <jsp:param name="secondName" value=""/>
+    </jsp:include>
+
+    <div class="container" style="max-width: 960px;">
+
+        <c:if test="${not empty exception}">
+            <div class="alert alert-danger" role="alert">
+                    ${exception}
+            </div>
+        </c:if>
+
+        <div class="card-columns mb-3 text-center">
 
             <c:forEach items="${tariffs}" var="tariff">
-                <div class="card text-center bg-light border-light mb-3">
-                    <div class="card-header"><h4><b>${tariff.name}</b></h4></div>
-                    <div class="card-body">
-                        <p class="card-text">Price: ${tariff.price}</p>
-                        <p class="card-text">${tariff.info}</p>
-                        <form action="/tariff">
-                            <input name="tariffId" type="hidden" value="${tariff.id}">
-                            <input type="submit" class="form-control btn btn-primary" value="Manage">
-                        </form>
-                    </div>
-                </div>
+                <jsp:include page="parts/priceCard.jsp">
+                    <jsp:param name="title" value="${tariff.name}"/>
+                    <jsp:param name="price" value="${tariff.price}"/>
+                    <jsp:param name="info" value="<p class='card-text'>Info: ${tariff.info}</p>"/>
+                    <jsp:param name="path" value="${path}"/>
+                    <jsp:param name="method" value="${method}"/>
+                    <jsp:param name="hiddenName1" value="tariffId"/>
+                    <jsp:param name="hiddenValue1" value="${tariff.id}"/>
+                    <jsp:param name="hiddenName2" value="${hiddenName}"/>
+                    <jsp:param name="hiddenValue2" value="${hiddenValue}"/>
+                    <jsp:param name="btnName" value="${btnName}"/>
+                    <jsp:param name="btnStyle" value="btn-primary"/>
+                </jsp:include>
             </c:forEach>
 
         </div>

@@ -19,7 +19,8 @@ public class LoggerAspect {
         LOG.debug("Call method " + methodName + " with args: ");
 
         for (Object methodArgs : joinPoint.getArgs())
-            LOG.debug(methodArgs.toString());
+            if (methodArgs != null)
+                LOG.debug(methodArgs.toString());
     }
 
     @AfterReturning(

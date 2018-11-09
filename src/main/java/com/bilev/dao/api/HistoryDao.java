@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface HistoryDao extends AbstractDao<Integer, History> {
 
-    List<History> getUserHistory(int userId);
+    List<History> getContractHistory(int contractId);
 
 }

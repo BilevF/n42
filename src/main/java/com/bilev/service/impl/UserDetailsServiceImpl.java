@@ -1,6 +1,7 @@
 package com.bilev.service.impl;
 
 import com.bilev.dao.api.UserDao;
+import com.bilev.exception.NotFoundException;
 import com.bilev.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,9 +24,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDao.findByEmail(username);
+        User user;
 
-        if (user == null) {
+        try {
+            user = userDao.findByEmail(username);
+        } catch (NotFoundException e) {
             throw new UsernameNotFoundException("Username not found");
         }
 
