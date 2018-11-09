@@ -85,6 +85,7 @@
                                                   <p class='card-text'>Balance: ${contract.balance}</p>"/>
                     <jsp:param name="path" value="/contract"/>
                     <jsp:param name="method" value="get"/>
+                    <jsp:param name="showBtn" value="${true}"/>
                     <jsp:param name="hiddenName1" value="contractId"/>
                     <jsp:param name="hiddenValue1" value="${contract.id}"/>
                     <jsp:param name="hiddenName2" value=""/>

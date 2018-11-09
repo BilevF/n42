@@ -30,6 +30,8 @@ public interface ContractService {
 
     void removeOptionFromBasket(int contractId, int optionId) throws NotFoundException, UnableToUpdateException;
 
+    void removeOptionFromContract(int contractId, int optionId) throws NotFoundException, UnableToUpdateException;
+
     void changeBlockStatus(int requestedUserId, int contractId) throws NotFoundException, UnableToUpdateException;
 
     void submitBasket(int contractId) throws NotFoundException, UnableToUpdateException, UnableToSaveException;

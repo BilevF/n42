@@ -106,7 +106,9 @@
                 <jsp:include page="parts/priceCard.jsp">
                     <jsp:param name="title" value="${option.name}"/>
                     <jsp:param name="price" value="${option.price}"/>
-                    <jsp:param name="info" value="<p class='card-text'>${option.info}</p>"/>
+                    <jsp:param name="info" value="<p class='card-text'>${option.info}</p>
+                                                  <p class='card-text'>Connection price ${option.connectionPrice}</p>"/>
+                    <jsp:param name="showBtn" value="${true}"/>
                     <jsp:param name="path" value="/removeOption"/>
                     <jsp:param name="method" value="post"/>
                     <jsp:param name="hiddenName1" value="tariffId"/>

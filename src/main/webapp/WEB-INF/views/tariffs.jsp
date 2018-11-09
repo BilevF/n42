@@ -32,6 +32,7 @@
                     <jsp:param name="info" value="<p class='card-text'>Info: ${tariff.info}</p>"/>
                     <jsp:param name="path" value="${path}"/>
                     <jsp:param name="method" value="${method}"/>
+                    <jsp:param name="showBtn" value="${true}"/>
                     <jsp:param name="hiddenName1" value="tariffId"/>
                     <jsp:param name="hiddenValue1" value="${tariff.id}"/>
                     <jsp:param name="hiddenName2" value="${hiddenName}"/>

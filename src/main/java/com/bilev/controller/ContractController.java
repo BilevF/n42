@@ -89,6 +89,21 @@ public class ContractController {
 
     }
 
+
+    @RequestMapping(value = "/removeContractOption", method = RequestMethod.POST)
+    public String removeContractOption(ModelMap model, @RequestParam("contractId") Integer contractId,
+                                       @RequestParam("optionId") Integer optionId,
+                                       Principal principal,
+                                       RedirectAttributes redirectAttributes) {
+        try {
+            contractService.removeOptionFromContract(contractId, optionId);
+        } catch (NotFoundException | UnableToUpdateException e) {
+            redirectAttributes.addFlashAttribute("exception", e.getMessage());
+        }
+        redirectAttributes.addAttribute("contractId", contractId);
+        return "redirect:/contract";
+    }
+
     @RequestMapping(value = "/addNewOption", method = RequestMethod.GET)
     public String addNewOption(ModelMap model, @RequestParam("contractId") Integer contractId,
                                Principal principal,

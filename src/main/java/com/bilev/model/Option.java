@@ -63,4 +63,7 @@ public class Option extends AbstractModel {
     )
     private Set<Option> incompatibleOptionsOf = new HashSet<>();
 
+    @Transient
+    private transient boolean availableForRemove;
+
 }

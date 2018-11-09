@@ -124,7 +124,8 @@
                     <jsp:param name="title" value="${option.name}"/>
                     <jsp:param name="price" value="${option.price}"/>
                     <jsp:param name="info" value="<p class='card-text'>${option.info}</p>"/>
-                    <jsp:param name="path" value="#"/>
+                    <jsp:param name="showBtn" value="${option.availableForRemove}"/>
+                    <jsp:param name="path" value="/removeContractOption"/>
                     <jsp:param name="method" value="post"/>
                     <jsp:param name="hiddenName1" value="contractId"/>
                     <jsp:param name="hiddenValue1" value="${contract.id}"/>

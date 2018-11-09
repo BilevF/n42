@@ -35,6 +35,8 @@ public class BasicOptionDto extends AbstractDto {
     @NotNull
     private List<BasicOptionDto> relatedOptions = new ArrayList<>();
 
+    private boolean availableForRemove;
+
     public enum SelectedOptionType {
         NON, INCOMPATIBLE, REQUIRED
     }

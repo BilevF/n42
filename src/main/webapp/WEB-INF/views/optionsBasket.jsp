@@ -43,6 +43,7 @@
                                     <p class='card-text'>Connection price: ${option.connectionPrice}</p>"/>
                                 <jsp:param name="path" value="/addToBasket"/>
                                 <jsp:param name="method" value="post"/>
+                                <jsp:param name="showBtn" value="${true}"/>
                                 <jsp:param name="hiddenName1" value="contractId"/>
                                 <jsp:param name="hiddenValue1" value="${contract.id}"/>
                                 <jsp:param name="hiddenName2" value="optionId"/>

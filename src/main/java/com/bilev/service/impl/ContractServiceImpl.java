@@ -53,6 +53,16 @@ public class ContractServiceImpl implements ContractService {
         try {
             Contract contract = contract = contractDao.getByKey(contractId);
 
+            for (Option option : contract.getOptions()) {
+                option.setAvailableForRemove(true);
+                for (Option requiredOptionOf : option.getRequiredOptionsOf()) {
+                    if (contract.getOptions().contains(requiredOptionOf)) {
+                        option.setAvailableForRemove(false);
+                        break;
+                    }
+                }
+            }
+
             return modelMapper.map(contract, ContractDto.class);
         } catch (NotFoundException e) {
             throw new NotFoundException("Contract not found", e);
@@ -241,6 +251,31 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     @Transactional(rollbackFor=Exception.class)
+    public void removeOptionFromContract(int contractId, int optionId) throws NotFoundException, UnableToUpdateException {
+        Option option;
+        Contract contract;
+        try {
+            option = optionDao.getByKey(optionId);
+        } catch (NotFoundException e) {
+            throw new NotFoundException("Option not found", e);
+        }
+        try {
+            contract = contractDao.getByKey(contractId);
+        } catch (NotFoundException e) {
+            throw new NotFoundException("Contract not found", e);
+        }
+
+        for (Option requiredOptionOf : option.getRequiredOptionsOf()) {
+            if (contract.getOptions().contains(requiredOptionOf)) {
+                throw new UnableToUpdateException("Unable to remove option (some options require it)");
+            }
+        }
+        contract.getOptions().remove(option);
+        contractDao.update(contract);
+    }
+
+    @Override
+    @Transactional(rollbackFor=Exception.class)
     public void submitBasket(int contractId) throws NotFoundException, UnableToUpdateException, UnableToSaveException {
         Contract contract;
         try {
@@ -370,4 +405,6 @@ public class ContractServiceImpl implements ContractService {
         }
 
     }
+
+
 }
