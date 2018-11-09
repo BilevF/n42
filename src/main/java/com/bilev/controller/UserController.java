@@ -3,16 +3,12 @@ package com.bilev.controller;
 import com.bilev.dto.*;
 import com.bilev.exception.NotFoundException;
 import com.bilev.exception.UnableToSaveException;
-import com.bilev.model.Role;
 import com.bilev.service.api.ContractService;
-import com.bilev.service.api.TariffService;
 import com.bilev.service.api.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -76,5 +72,20 @@ public class UserController {
         model.addAttribute("users", users);
         return "users";
     }
+
+    @RequestMapping(value = "/findUser", method = RequestMethod.POST)
+    public String findUser(@RequestParam("phone") String phone,
+                           RedirectAttributes redirectAttributes) {
+        try {
+            int userId = userService.findUserByPhone(phone);
+            redirectAttributes.addAttribute("userId", userId);
+            return "redirect:/user";
+
+        } catch (NotFoundException e) {
+            redirectAttributes.addFlashAttribute("exception", e.getMessage());
+            return "redirect:/account";
+        }
+    }
+
 
 }

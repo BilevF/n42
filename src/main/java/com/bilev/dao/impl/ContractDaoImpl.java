@@ -1,6 +1,7 @@
 package com.bilev.dao.impl;
 
 import com.bilev.dao.api.ContractDao;
+import com.bilev.exception.NotFoundException;
 import com.bilev.exception.UnableToUpdateException;
 import com.bilev.model.Contract;
 import org.hibernate.Criteria;
@@ -21,6 +22,15 @@ public class ContractDaoImpl extends AbstractDaoImpl<Integer, Contract> implemen
         criteria.createAlias("user", "user")
                 .add(Restrictions.eq("user.Id", userId));
         return (List<Contract>) criteria.list();
+    }
+
+    @Override
+    public Contract getContractByPhone(String phone) throws NotFoundException {
+        Criteria criteria = createEntityCriteria();
+        criteria.add(Restrictions.eq("phoneNumber", phone));
+        Contract contract = (Contract) criteria.uniqueResult();
+        if (contract == null) throw new NotFoundException("Contract not found");
+        return contract;
     }
 
     @Override

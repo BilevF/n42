@@ -17,6 +17,8 @@ public interface UserService {
 
     List<BasicUserDto> getAllUsers();
 
+    int findUserByPhone(String phone) throws NotFoundException;
+
     int saveUser(BasicUserDto basicUserDto) throws UnableToSaveException;
 
     int saveContract(BasicContractDto contractDto) throws UnableToSaveException;

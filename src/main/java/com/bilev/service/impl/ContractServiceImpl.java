@@ -13,7 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.Queue;
+import java.util.Date;
+import java.util.LinkedList;
 
 @Service("contractService")
 public class ContractServiceImpl implements ContractService {
@@ -102,11 +107,11 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     @Transactional(readOnly = true)
-    public Collection<HistoryDto> getContractHistory(int contractId) throws NotFoundException {
+    public Set<HistoryDto> getContractHistory(int contractId) throws NotFoundException {
         try {
             Contract contract = contractDao.getByKey(contractId);
 
-            return modelMapper.map(contract.getHistories(), new TypeToken<Collection<HistoryDto>>() {}.getType());
+            return modelMapper.map(contract.getHistories(), new TypeToken<Set<HistoryDto>>() {}.getType());
         } catch (NotFoundException e) {
             throw new NotFoundException("Contract not found", e);
         }
@@ -250,7 +255,7 @@ public class ContractServiceImpl implements ContractService {
         if (sum > contract.getBalance()) {
             throw new UnableToUpdateException("Not enough money");
         }
-
+        contract.setBalance(contract.getBalance() - sum);
         contract.getOptions().addAll(contract.getBasket());
 
         for (Option option : contract.getBasket()) {

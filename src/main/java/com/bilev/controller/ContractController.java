@@ -236,4 +236,37 @@ public class ContractController {
             return "redirect:/account";
         }
     }
+
+    @RequestMapping(value = "/addMoney", method = RequestMethod.GET)
+    public String addMoney(@RequestParam("contractId") Integer contractId,
+                          Principal principal,
+                          ModelMap model,
+                          RedirectAttributes redirectAttributes) {
+
+        try {
+            ContractDto contract = contractService.getContract(contractId);
+            model.addAttribute("contract", contract);
+            return "addMoney";
+        } catch (NotFoundException e) {
+            redirectAttributes.addFlashAttribute("exception", e.getMessage());
+            return "redirect:/account";
+        }
+    }
+
+    @RequestMapping(value = "/addMoney", method = RequestMethod.POST)
+    public String addMoneyAction(@RequestParam("contractId") Integer contractId,
+                                 @RequestParam("moneyValue") Integer moneyValue,
+                           Principal principal,
+                           ModelMap model,
+                           RedirectAttributes redirectAttributes) {
+
+        try {
+            contractService.addMoney(contractId, moneyValue);
+            redirectAttributes.addAttribute("contractId", contractId);
+            return "redirect:/contract";
+        } catch (NotFoundException | UnableToUpdateException | UnableToSaveException e) {
+            redirectAttributes.addFlashAttribute("exception", e.getMessage());
+            return "addMoney";
+        }
+    }
 }

@@ -6,7 +6,6 @@ import com.bilev.dao.api.RoleDao;
 import com.bilev.dao.api.UserDao;
 import com.bilev.dto.BasicContractDto;
 import com.bilev.dto.BasicUserDto;
-import com.bilev.dto.ContractDto;
 import com.bilev.dto.UserDto;
 import com.bilev.exception.NotFoundException;
 import com.bilev.exception.UnableToSaveException;
@@ -16,7 +15,6 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -69,6 +67,18 @@ public class UserServiceImpl implements UserService {
         List<User> users = userDao.getAllUsers();
 
         return modelMapper.map(users, new TypeToken<List<BasicUserDto>>() {}.getType());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public int findUserByPhone(String phone) throws NotFoundException {
+        try {
+            Contract contract = contractDao.getContractByPhone(phone);
+            return contract.getUser().getId();
+        } catch (NotFoundException e) {
+            throw new NotFoundException("User not found", e);
+        }
+
     }
 
     @Override

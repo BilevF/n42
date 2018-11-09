@@ -72,7 +72,7 @@
             <jsp:param name="btn1Method" value="get"/>
 
             <jsp:param name="showBtn2" value="${contract.blockType == 'NON'}"/>
-            <jsp:param name="btn2Path" value="#"/>
+            <jsp:param name="btn2Path" value="/addMoney"/>
             <jsp:param name="btn2HiddenName" value="contractId"/>
             <jsp:param name="btn2HiddenValue" value="${contract.id}"/>
             <jsp:param name="btn2Name" value="Add money"/>
