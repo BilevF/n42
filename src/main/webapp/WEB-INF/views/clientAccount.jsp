@@ -12,7 +12,7 @@
 
     <jsp:include page="parts/welcom.jsp">
         <jsp:param name="name" value="Hello, ${client.firstName} ${client.lastName}!"/>
-        <jsp:param name="massage" value="<p>Welcome to the clients's home page</p>"/>
+        <jsp:param name="message" value="<p>Welcome to the clients's home page</p>"/>
         <jsp:param name="secondName" value=""/>
     </jsp:include>
 

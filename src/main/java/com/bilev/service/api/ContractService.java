@@ -3,6 +3,7 @@ package com.bilev.service.api;
 import com.bilev.dto.BasicOptionDto;
 import com.bilev.dto.ContractDto;
 import com.bilev.dto.HistoryDto;
+import com.bilev.exception.AccessException;
 import com.bilev.exception.NotFoundException;
 import com.bilev.exception.UnableToSaveException;
 import com.bilev.exception.UnableToUpdateException;
@@ -24,19 +25,19 @@ public interface ContractService {
 
     // Edit
 
-    void changeContractTariff(int contractId, int replacementTariffId) throws NotFoundException, UnableToUpdateException;
+    void changeContractTariff(int contractId, int replacementTariffId) throws NotFoundException, UnableToUpdateException, AccessException;
 
-    void addOptionToBasket(int contractId, int optionId) throws NotFoundException, UnableToUpdateException;
+    void addOptionToBasket(int contractId, int optionId) throws NotFoundException, UnableToUpdateException, AccessException;
 
-    void removeOptionFromBasket(int contractId, int optionId) throws NotFoundException, UnableToUpdateException;
+    void removeOptionFromBasket(int contractId, int optionId) throws NotFoundException, UnableToUpdateException, AccessException;
 
-    void removeOptionFromContract(int contractId, int optionId) throws NotFoundException, UnableToUpdateException;
+    void removeOptionFromContract(int contractId, int optionId) throws NotFoundException, UnableToUpdateException, AccessException;
 
-    void changeBlockStatus(int requestedUserId, int contractId) throws NotFoundException, UnableToUpdateException;
+    void changeBlockStatus(int requestedUserId, int contractId) throws NotFoundException, UnableToUpdateException, AccessException;
 
-    void submitBasket(int contractId) throws NotFoundException, UnableToUpdateException, UnableToSaveException;
+    void submitBasket(int contractId) throws NotFoundException, UnableToUpdateException, UnableToSaveException, AccessException;
 
-    void clearBasket(int contractId) throws UnableToUpdateException, NotFoundException;
+    void clearBasket(int contractId) throws UnableToUpdateException, NotFoundException, AccessException;
 
-    void addMoney(int contractId, double amount) throws UnableToUpdateException, UnableToSaveException, NotFoundException;
+    void addMoney(int contractId, double amount) throws UnableToUpdateException, UnableToSaveException, NotFoundException, AccessException;
 }

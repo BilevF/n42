@@ -9,6 +9,7 @@ import com.bilev.dao.api.UserDao;
 import com.bilev.dto.BasicOptionDto;
 import com.bilev.dto.ContractDto;
 import com.bilev.dto.HistoryDto;
+import com.bilev.exception.AccessException;
 import com.bilev.exception.NotFoundException;
 import com.bilev.exception.UnableToSaveException;
 import com.bilev.exception.UnableToUpdateException;
@@ -150,7 +151,7 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     @Transactional(rollbackFor=Exception.class)
-    public void changeContractTariff(int contractId, int replacementTariffId) throws NotFoundException, UnableToUpdateException {
+    public void changeContractTariff(int contractId, int replacementTariffId) throws NotFoundException, UnableToUpdateException, AccessException {
         Tariff tariff;
         Contract contract;
         try {
@@ -163,6 +164,8 @@ public class ContractServiceImpl implements ContractService {
         } catch (NotFoundException e) {
             throw new NotFoundException("Contract not found", e);
         }
+
+        if (contract.getBlock().getBlockType() != Block.BlockType.NON) throw new AccessException("Access denied");
 
         try {
             if (contract.getTariff().equals(tariff)) {
@@ -180,7 +183,7 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     @Transactional(rollbackFor=Exception.class)
-    public void addOptionToBasket(int contractId, int optionId) throws NotFoundException, UnableToUpdateException {
+    public void addOptionToBasket(int contractId, int optionId) throws NotFoundException, UnableToUpdateException, AccessException {
         Option option;
         Contract contract;
         try {
@@ -193,6 +196,8 @@ public class ContractServiceImpl implements ContractService {
         } catch (NotFoundException e) {
             throw new NotFoundException("Contract not found", e);
         }
+
+        if (contract.getBlock().getBlockType() != Block.BlockType.NON) throw new AccessException("Access denied");
 
         try {
             if (contract.getOptions().contains(option))
@@ -233,7 +238,7 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     @Transactional(rollbackFor=Exception.class)
-    public void removeOptionFromBasket(int contractId, int optionId) throws NotFoundException, UnableToUpdateException {
+    public void removeOptionFromBasket(int contractId, int optionId) throws NotFoundException, UnableToUpdateException, AccessException {
         Option option;
         Contract contract;
         try {
@@ -246,6 +251,8 @@ public class ContractServiceImpl implements ContractService {
         } catch (NotFoundException e) {
             throw new NotFoundException("Contract not found", e);
         }
+
+        if (contract.getBlock().getBlockType() != Block.BlockType.NON) throw new AccessException("Access denied");
 
         Queue<Option> removedOptions = new LinkedList<>();
         removedOptions.add(option);
@@ -270,7 +277,7 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     @Transactional(rollbackFor=Exception.class)
-    public void removeOptionFromContract(int contractId, int optionId) throws NotFoundException, UnableToUpdateException {
+    public void removeOptionFromContract(int contractId, int optionId) throws NotFoundException, UnableToUpdateException, AccessException {
         Option option;
         Contract contract;
         try {
@@ -284,6 +291,8 @@ public class ContractServiceImpl implements ContractService {
             throw new NotFoundException("Contract not found", e);
         }
 
+        if (contract.getBlock().getBlockType() != Block.BlockType.NON) throw new AccessException("Access denied");
+
         for (Option requiredOptionOf : option.getRequiredOptionsOf()) {
             if (contract.getOptions().contains(requiredOptionOf)) {
                 throw new UnableToUpdateException("Unable to remove option (some options require it)");
@@ -295,13 +304,15 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     @Transactional(rollbackFor=Exception.class)
-    public void submitBasket(int contractId) throws NotFoundException, UnableToUpdateException, UnableToSaveException {
+    public void submitBasket(int contractId) throws NotFoundException, UnableToUpdateException, UnableToSaveException, AccessException {
         Contract contract;
         try {
             contract = contractDao.getByKey(contractId);
         } catch (NotFoundException e) {
             throw new NotFoundException("Contract not found", e);
         }
+
+        if (contract.getBlock().getBlockType() != Block.BlockType.NON) throw new AccessException("Access denied");
 
         double sum = 0;
         for (Option option : contract.getBasket()) sum += option.getConnectionPrice();
@@ -332,11 +343,14 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     @Transactional(rollbackFor=Exception.class)
-    public void clearBasket(int contractId) throws UnableToUpdateException, NotFoundException {
+    public void clearBasket(int contractId)
+            throws UnableToUpdateException, NotFoundException, AccessException {
 
         try {
             Contract contract = contractDao.getByKey(contractId);
 
+            if (contract.getBlock().getBlockType() != Block.BlockType.NON) throw new AccessException("Access denied");
+            
             contract.getBasket().clear();
             contractDao.update(contract);
         } catch (UnableToUpdateException e) {
@@ -348,7 +362,8 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     @Transactional(rollbackFor=Exception.class)
-    public void changeBlockStatus(int requestedUserId, int contractId) throws NotFoundException, UnableToUpdateException {
+    public void changeBlockStatus(int requestedUserId, int contractId)
+            throws NotFoundException, UnableToUpdateException, AccessException {
         User user;
         Contract contract;
         try {
@@ -378,7 +393,7 @@ public class ContractServiceImpl implements ContractService {
                 case ROLE_CLIENT:
                     switch (contract.getBlock().getBlockType()) {
                         case ADMIN_BLOCK:
-                            throw new UnableToUpdateException();
+                            throw new AccessException("Access denied");
                         case CLIENT_BLOCK:
                             contract.setBlock(blockDao.getBlockByType(Block.BlockType.NON));
                             break;
@@ -396,10 +411,13 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     @Transactional(rollbackFor=Exception.class)
-    public void addMoney(int contractId, double amount) throws UnableToUpdateException, UnableToSaveException, NotFoundException {
+    public void addMoney(int contractId, double amount)
+            throws UnableToUpdateException, UnableToSaveException, NotFoundException, AccessException {
 
         try {
             Contract contract = contractDao.getByKey(contractId);
+
+            if (contract.getBlock().getBlockType() != Block.BlockType.NON) throw new AccessException("Access denied");
 
             if (amount <= 0)
                 throw new UnableToUpdateException();

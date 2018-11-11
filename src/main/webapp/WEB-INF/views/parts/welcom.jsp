@@ -8,7 +8,7 @@
         </h2>
         <%--<hr class="my-4">--%>
         <div>
-            <small class="text-muted">${param.massage}</small>
+            <small class="text-muted">${param.message}</small>
         </div>
     </div>
 </div>

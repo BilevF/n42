@@ -1,6 +1,7 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm" style="padding-right: 15px;padding-left: 15px;margin-right: auto;margin-left: auto;max-width: 960px;">
     <div class="my-0 mr-md-auto font-weight-normal">
@@ -12,18 +13,25 @@
         </div>
     </div>
     <nav class="my-2 my-md-0 mr-md-3">
-        <a class="p-2 text-dark" href="#">Features</a>
-        <a class="p-2 text-dark" href="#">Enterprise</a>
-        <a class="p-2 text-dark" href="#">Support</a>
-        <a class="p-2 text-dark" href="#">Pricing</a>
-        <c:choose>
-            <c:when test="${requestScope['javax.servlet.forward.request_uri'] == '/'}">
-                <jsp:include page="login.jsp"/>
-            </c:when>
-            <c:otherwise>
-                <a class="btn btn-primary" href="/logout">Logout</a>
-            </c:otherwise>
-        </c:choose>
+
+        <sec:authorize access="hasRole('ROLE_ADMIN')">
+            <a class="p-2 text-dark" href="/tariffs">Tariffs</a>
+        </sec:authorize>
+        <sec:authorize access="!hasRole('ROLE_ADMIN')">
+            <a class="p-2 text-dark" href="/availableTariffs">Tariffs</a>
+        </sec:authorize>
+
+        <sec:authorize access="hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')">
+            <a class="p-2 text-dark" href="/account">Account</a>
+        </sec:authorize>
+
+        <sec:authorize access="hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')">
+            <a class="btn btn-primary" href="/logout">Logout</a>
+        </sec:authorize>
+        <sec:authorize access="!(hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT'))">
+            <jsp:include page="login.jsp"/>
+        </sec:authorize>
+
     </nav>
 
 </div>

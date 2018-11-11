@@ -80,6 +80,21 @@ public class TariffController {
         model.addAttribute("hiddenName", "");
         model.addAttribute("hiddenValue", "");
         model.addAttribute("btnName", "Manage");
+        model.addAttribute("showBtn", true);
+
+        return "tariffs";
+    }
+
+    @RequestMapping(value = "/availableTariffs")
+    public String availableTariffs(ModelMap model) {
+        model.addAttribute("tariffs", tariffService.getAvailableTariffs());
+        model.addAttribute("title", "N42 Tariffs");
+        model.addAttribute("path", "");
+        model.addAttribute("method", "get");
+        model.addAttribute("hiddenName", "");
+        model.addAttribute("hiddenValue", "");
+        model.addAttribute("btnName", "");
+        model.addAttribute("showBtn", false);
 
         return "tariffs";
     }
@@ -169,6 +184,7 @@ public class TariffController {
         model.addAttribute("hiddenName", "originTariffId");
         model.addAttribute("hiddenValue", tariffId);
         model.addAttribute("btnName", "Select");
+        model.addAttribute("showBtn", true);
 
         return "tariffs";
     }

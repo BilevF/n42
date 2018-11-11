@@ -12,7 +12,7 @@
     <jsp:include page="parts/welcom.jsp">
         <jsp:param name="name" value="Internal server error"/>
         <jsp:param name="secondName" value=""/>
-        <jsp:param name="massage" value="We will be back soon>"/>
+        <jsp:param name="message" value="We will be back soon>"/>
 
     </jsp:include>
 

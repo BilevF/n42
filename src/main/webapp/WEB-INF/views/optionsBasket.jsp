@@ -14,7 +14,7 @@
     <jsp:include page="parts/welcom.jsp">
         <jsp:param name="name" value="Phone number: ${contract.phoneNumber}"/>
         <jsp:param name="secondName" value="Balance: ${contract.balance}"/>
-        <jsp:param name="massage" value="<p>Welcome to the home page of available options</p>"/>
+        <jsp:param name="message" value="<p>Welcome to the home page of available options</p>"/>
 
     </jsp:include>
 
@@ -25,6 +25,16 @@
                     ${exception}
             </div>
         </c:if>
+
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/account">Account</a></li>
+                <li>
+                    <a href="/contract?contractId=${contract.id}">Contract</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Contract</li>
+            </ol>
+        </nav>
 
         <c:if test="${contract.blockType == 'NON'}">
 

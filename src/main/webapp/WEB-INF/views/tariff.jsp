@@ -12,7 +12,7 @@
 
     <jsp:include page="parts/welcom.jsp">
         <jsp:param name="name" value="${tariff.name}"/>
-        <jsp:param name="massage" value="<p>Welcome to the tariff's home page</p>"/>
+        <jsp:param name="message" value="<p>Welcome to the tariff's home page</p>"/>
         <jsp:param name="secondName" value=""/>
     </jsp:include>
 

@@ -245,6 +245,7 @@ public class ContractController {
         model.addAttribute("hiddenName", "contractId");
         model.addAttribute("hiddenValue", contractId);
         model.addAttribute("btnName", "Select");
+        model.addAttribute("showBtn", true);
         return "tariffs";
     }
 
