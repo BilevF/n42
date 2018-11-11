@@ -10,4 +10,10 @@ public class HomeController {
     public String home() {
         return "home";
     }
+
+    @RequestMapping(value = "/accessDenied")
+    public String accessDenied() {
+        return "accessDenied";
+    }
+
 }

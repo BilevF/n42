@@ -48,7 +48,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .usernameParameter("username")//
                 .passwordParameter("password")
                 // Config for Logout Page
-                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/");
+                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/")
+                .and().exceptionHandling().accessDeniedPage("/accessDenied");
     }
 
     @Bean

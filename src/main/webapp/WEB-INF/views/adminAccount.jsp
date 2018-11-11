@@ -76,7 +76,7 @@
 
                 <form action="/findUser" method="post">
                     <div class="input-group">
-                        <input type="text" class="form-control" name="phone" placeholder="Phone">
+                        <input type="text" class="form-control" name="phone" placeholder="Phone / Email">
                         <span class="input-group-btn">
                                 <button class="btn btn-primary" type="submit">Find client</button>
                             </span>

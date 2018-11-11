@@ -44,7 +44,7 @@ public class ContractController {
     @ExceptionHandler(AccessException.class)
     public String handleAllException(AccessException e) {
         //redirectAttributes.addFlashAttribute("exception", e.getMessage());
-        return "redirect:/account";
+        return "redirect:/accessDenied";
     }
 
     @ExceptionHandler(Exception.class)

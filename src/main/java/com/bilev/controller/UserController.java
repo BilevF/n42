@@ -31,7 +31,7 @@ public class UserController {
     @ExceptionHandler(Exception.class)
     public String handleException(final Exception e) {
 
-        return "forward:/serverError";
+        return "serverError";
     }
 
     @RequestMapping(value = "/newUser", method = RequestMethod.GET)
@@ -78,17 +78,21 @@ public class UserController {
     }
 
     @RequestMapping(value = "/findUser", method = RequestMethod.POST)
-    public String findUser(@RequestParam("phone") String phone,
+    public String findUser(@RequestParam("phone") String phoneOrEmail,
                            RedirectAttributes redirectAttributes) {
+        int userId;
         try {
-            int userId = userService.findUserByPhone(phone);
-            redirectAttributes.addAttribute("userId", userId);
-            return "redirect:/user";
-
+            userId = userService.findUserByPhone(phoneOrEmail);
         } catch (NotFoundException e) {
-            redirectAttributes.addFlashAttribute("exception", e.getMessage());
-            return "redirect:/account";
+            try {
+                userId = userService.getUserByEmail(phoneOrEmail).getId();
+            } catch (NotFoundException e1) {
+                redirectAttributes.addFlashAttribute("exception", e.getMessage());
+                return "redirect:/account";
+            }
         }
+        redirectAttributes.addAttribute("userId", userId);
+        return "redirect:/user";
     }
 
 

@@ -13,7 +13,7 @@
 
     <jsp:include page="parts/welcom.jsp">
         <jsp:param name="name" value="Phone number: ${contract.phoneNumber}"/>
-        <jsp:param name="secondName" value="Balance: ${contract.balance}"/>
+        <jsp:param name="secondName" value="Balance: $${contract.balance}"/>
         <jsp:param name="message" value="<p>Welcome to the home page of available options</p>"/>
 
     </jsp:include>
