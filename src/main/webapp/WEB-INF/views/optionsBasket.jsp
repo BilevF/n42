@@ -32,7 +32,7 @@
                 <li>
                     <a href="/contract?contractId=${contract.id}">Contract</a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">Contract</li>
+                <li class="breadcrumb-item active" aria-current="page">Cart</li>
             </ol>
         </nav>
 
@@ -62,6 +62,10 @@
                                 <jsp:param name="btnStyle" value="btn-primary"/>
                             </jsp:include>
                         </c:forEach>
+
+                        <c:if test="${availableOptions.size() == 0}">
+                            <p align="left">No options available</p>
+                        </c:if>
                     </div>
 
                 </div>
@@ -74,7 +78,9 @@
                             <span class="badge badge-secondary badge-pill">${contract.basket.size()}</span>
                         </c:if>
                     </h2>
-                    <c:if test = "${contract.basket != null && contract.basket.size() > 0}">
+
+                    <c:choose>
+                    <c:when test = "${contract.basket != null && contract.basket.size() > 0}">
                         <ul class="list-group mb-3">
                             <c:forEach items="${contract.basket}" var="option">
                                 <li class="list-group-item d-flex justify-content-between lh-condensed">
@@ -110,7 +116,11 @@
                                 <button type="submit" class="btn btn btn-danger">Clear</button>
                             </form>
                         </div>
-                    </c:if>
+                    </c:when>
+                    <c:otherwise>
+                        <span class="text-muted">Your cart is empty</span>
+                    </c:otherwise>
+                    </c:choose>
 
                 </div>
 

@@ -350,7 +350,7 @@ public class ContractServiceImpl implements ContractService {
             Contract contract = contractDao.getByKey(contractId);
 
             if (contract.getBlock().getBlockType() != Block.BlockType.NON) throw new AccessException("Access denied");
-            
+
             contract.getBasket().clear();
             contractDao.update(contract);
         } catch (UnableToUpdateException e) {

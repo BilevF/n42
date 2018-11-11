@@ -17,7 +17,7 @@ import java.util.Set;
 public class Block extends AbstractModel {
 
     public enum BlockType {
-        NON, CLIENT_BLOCK, ADMIN_BLOCK
+        NON, CLIENT_BLOCK, ADMIN_BLOCK, NOT_FOUND
     }
 
     @Enumerated(EnumType.STRING)

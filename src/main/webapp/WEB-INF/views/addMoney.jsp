@@ -25,7 +25,7 @@
 
         <form action="/addMoney" method="post">
             <div class="input-group">
-                <input type="number" min="0" class="form-control" name="moneyValue" placeholder="Phone">
+                <input type="number" min="1" max="10000" pattern="\d*" class="form-control" name="moneyValue" placeholder="Amount">
                 <input name="contractId" type="hidden" value="${contract.id}">
                 <span class="input-group-btn">
                     <button class="btn btn-primary" type="submit">Add</button>

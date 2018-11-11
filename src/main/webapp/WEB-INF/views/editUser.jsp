@@ -52,7 +52,7 @@
             <spring:bind path="address">
                 <div class="form-group">
                     <form:label for="address" path="address">Address</form:label>
-                    <form:input type="text" path="address" class="form-control ${status.error ? 'is-invalid' : ''}" id="address" placeholder="info"/>
+                    <form:input type="text" path="address" class="form-control ${status.error ? 'is-invalid' : ''}" id="address" placeholder=""/>
                     <div class="invalid-feedback">
                         <form:errors path="address" cssClass="error"/>
                     </div>
@@ -62,7 +62,7 @@
             <spring:bind path="passport">
                 <div class="form-group">
                     <form:label for="passport" path="passport">Passport</form:label>
-                    <form:input type="text" path="passport" class="form-control ${status.error ? 'is-invalid' : ''}" id="passport" placeholder="info"/>
+                    <form:input type="text" path="passport" class="form-control ${status.error ? 'is-invalid' : ''}" id="passport" placeholder=""/>
                     <div class="invalid-feedback">
                         <form:errors path="passport" cssClass="error"/>
                     </div>
@@ -72,7 +72,7 @@
             <spring:bind path="email">
                 <div class="form-group">
                     <form:label for="email" path="email">Email</form:label>
-                    <form:input type="text" path="email" autocomplete="false" class="form-control ${status.error ? 'is-invalid' : ''}" id="email" placeholder="info"/>
+                    <form:input type="text" path="email" autocomplete="false" class="form-control ${status.error ? 'is-invalid' : ''}" id="email" placeholder=""/>
                     <div class="invalid-feedback">
                         <form:errors path="email" cssClass="error"/>
                     </div>
@@ -82,7 +82,7 @@
             <spring:bind path="password">
                 <div class="form-group">
                     <form:label for="password" path="password">Email</form:label>
-                    <form:input type="password" path="password" autocomplete="false" class="form-control ${status.error ? 'is-invalid' : ''}" id="password" placeholder="info"/>
+                    <form:input type="password" path="password" autocomplete="false" class="form-control ${status.error ? 'is-invalid' : ''}" id="password" placeholder=""/>
                     <div class="invalid-feedback">
                         <form:errors path="password" cssClass="error"/>
                     </div>

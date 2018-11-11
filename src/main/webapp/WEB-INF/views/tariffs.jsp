@@ -1,6 +1,8 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
 <html>
 <head>
     <jsp:include page="parts/header.jsp"/>
@@ -23,6 +25,15 @@
             </div>
         </c:if>
 
+        <sec:authorize access="hasRole('ROLE_ADMIN')">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/account">Account</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Tariffs</li>
+                </ol>
+            </nav>
+        </sec:authorize>
+
         <div class="card-columns mb-3 text-center">
 
             <c:forEach items="${tariffs}" var="tariff">
@@ -41,7 +52,9 @@
                     <jsp:param name="btnStyle" value="btn-primary"/>
                 </jsp:include>
             </c:forEach>
-
+            <c:if test="${tariffs.size() == 0}">
+                <p align="left">No tariffs available</p>
+            </c:if>
         </div>
 
     </div>

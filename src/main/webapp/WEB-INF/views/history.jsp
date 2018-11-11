@@ -17,6 +17,16 @@
 
     <div class="container" style="max-width: 960px;">
 
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/account">Account</a></li>
+                <li>
+                    <a href="/contract?contractId=${contractId}">Contract</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">History</li>
+            </ol>
+        </nav>
+
         <table class="table table-hover">
             <thead>
             <tr>

@@ -53,10 +53,10 @@
 
             <div class="form-group">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-primary active">
+                    <label class="btn btn-secondary active">
                         <input type="radio" name="valid" value="true" autocomplete="off" checked> ACTIVE
                     </label>
-                    <label class="btn btn-primary">
+                    <label class="btn btn-secondary">
                         <input type="radio" name="valid" value="false" autocomplete="off"> BLOCKED
                     </label>
                 </div>

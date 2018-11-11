@@ -295,6 +295,7 @@ public class ContractController {
             if (!hasAccess(principal, contractId)) throw new AccessException("Access denied");
             Collection<HistoryDto> history = contractService.getContractHistory(contractId);
             model.addAttribute("history", history);
+            model.addAttribute("contractId", contractId);
             return "history";
         } catch (NotFoundException e) {
             redirectAttributes.addFlashAttribute("exception", e.getMessage());
@@ -323,7 +324,7 @@ public class ContractController {
 
     @RequestMapping(value = "/addMoney", method = RequestMethod.POST)
     public String addMoneyAction(@RequestParam("contractId") Integer contractId,
-                                 @RequestParam("moneyValue") Integer moneyValue,
+                                 @RequestParam("moneyValue") Double moneyValue,
                            Principal principal,
                            ModelMap model,
                            RedirectAttributes redirectAttributes) throws AccessException {

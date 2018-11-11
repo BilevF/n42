@@ -115,7 +115,8 @@ public class UserServiceImpl implements UserService {
         Contract contract = modelMapper.map(contractDto, Contract.class);
 
         if (contract.getBalance() == null) contract.setBalance(0.0);
-        if (contract.getBlock() == null) contract.setBlock(blockDao.getBlockByType(Block.BlockType.NON));
+        if (contract.getBlock().getBlockType() == Block.BlockType.NOT_FOUND)
+            contract.setBlock(blockDao.getBlockByType(Block.BlockType.NON));
 
         try {
             contract.setTariff(tariffDao.getByKey(contractDto.getTariff().getId()));
