@@ -4,6 +4,7 @@ import com.bilev.model.Role;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Email;
 import org.springframework.format.annotation.DateTimeFormat;
 
 
@@ -38,6 +39,7 @@ public class BasicUserDto extends AbstractDto {
 
     @NotNull
     @Size(min=2, max=100)
+    @Email
     private String email;
 
     @NotNull

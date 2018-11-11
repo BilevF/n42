@@ -3,13 +3,18 @@ package com.bilev.service.impl;
 import com.bilev.dao.api.BlockDao;
 import com.bilev.dao.api.ContractDao;
 import com.bilev.dao.api.RoleDao;
+import com.bilev.dao.api.TariffDao;
 import com.bilev.dao.api.UserDao;
 import com.bilev.dto.BasicContractDto;
 import com.bilev.dto.BasicUserDto;
 import com.bilev.dto.UserDto;
 import com.bilev.exception.NotFoundException;
 import com.bilev.exception.UnableToSaveException;
-import com.bilev.model.*;
+
+import com.bilev.model.Block;
+import com.bilev.model.Contract;
+import com.bilev.model.Role;
+import com.bilev.model.User;
 import com.bilev.service.api.UserService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -32,6 +37,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private BlockDao blockDao;
+
+    @Autowired
+    private TariffDao tariffDao;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -76,7 +84,7 @@ public class UserServiceImpl implements UserService {
             Contract contract = contractDao.getContractByPhone(phone);
             return contract.getUser().getId();
         } catch (NotFoundException e) {
-            throw new NotFoundException("User not found", e);
+            throw new NotFoundException("Client not found (" + phone + ")", e);
         }
 
     }
@@ -103,11 +111,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor=Exception.class)
-    public int saveContract(BasicContractDto contractDto) throws UnableToSaveException {
+    public int saveContract(BasicContractDto contractDto) throws UnableToSaveException, NotFoundException {
         Contract contract = modelMapper.map(contractDto, Contract.class);
 
         if (contract.getBalance() == null) contract.setBalance(0.0);
         if (contract.getBlock() == null) contract.setBlock(blockDao.getBlockByType(Block.BlockType.NON));
+
+        try {
+            contract.setTariff(tariffDao.getByKey(contractDto.getTariff().getId()));
+        } catch (NotFoundException e) {
+            throw new NotFoundException("Tariff not found", e);
+        }
 
         try {
             contractDao.saveOrUpdate(contract);

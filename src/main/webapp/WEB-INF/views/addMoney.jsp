@@ -11,7 +11,7 @@
 
     <jsp:include page="parts/welcom.jsp">
         <jsp:param name="name" value="Phone number: ${contract.phoneNumber}"/>
-        <jsp:param name="secondName" value="Balance: ${contract.balance}"/>
+        <jsp:param name="secondName" value="Balance: $${contract.balance}"/>
         <jsp:param name="massage" value="<p>On this page you can add funds to your account</p>"/>
     </jsp:include>
 

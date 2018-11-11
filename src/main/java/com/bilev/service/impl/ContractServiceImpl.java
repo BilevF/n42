@@ -1,11 +1,24 @@
 package com.bilev.service.impl;
 
-import com.bilev.dao.api.*;
-import com.bilev.dto.*;
+import com.bilev.dao.api.BlockDao;
+import com.bilev.dao.api.ContractDao;
+import com.bilev.dao.api.HistoryDao;
+import com.bilev.dao.api.OptionDao;
+import com.bilev.dao.api.TariffDao;
+import com.bilev.dao.api.UserDao;
+import com.bilev.dto.BasicOptionDto;
+import com.bilev.dto.ContractDto;
+import com.bilev.dto.HistoryDto;
 import com.bilev.exception.NotFoundException;
 import com.bilev.exception.UnableToSaveException;
 import com.bilev.exception.UnableToUpdateException;
-import com.bilev.model.*;
+
+import com.bilev.model.Block;
+import com.bilev.model.Contract;
+import com.bilev.model.History;
+import com.bilev.model.Option;
+import com.bilev.model.Tariff;
+import com.bilev.model.User;
 import com.bilev.service.api.ContractService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -19,6 +32,7 @@ import java.util.Set;
 import java.util.Queue;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 
 @Service("contractService")
 public class ContractServiceImpl implements ContractService {
@@ -117,11 +131,16 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     @Transactional(readOnly = true)
-    public Set<HistoryDto> getContractHistory(int contractId) throws NotFoundException {
+    public List<HistoryDto> getContractHistory(int contractId) throws NotFoundException {
         try {
             Contract contract = contractDao.getByKey(contractId);
 
-            return modelMapper.map(contract.getHistories(), new TypeToken<Set<HistoryDto>>() {}.getType());
+            List<HistoryDto> history = new LinkedList<> (
+                    modelMapper.map(contract.getHistories(), new TypeToken<Set<HistoryDto>>() {}.getType()));
+
+            history.sort((o1,o2) -> o2.getDate().compareTo(o1.getDate()));
+
+            return history;
         } catch (NotFoundException e) {
             throw new NotFoundException("Contract not found", e);
         }
@@ -391,8 +410,8 @@ public class ContractServiceImpl implements ContractService {
 
             History history = new History();
             history.setDate(new Date());
-            history.setName("Fill up balance : ");
-            history.setPrice(contract.getBalance());
+            history.setName("Fill up balance");
+            history.setPrice(amount);
             history.setContract(contract);
             historyDao.save(history);
 

@@ -33,7 +33,7 @@
             </c:when>
             <c:otherwise>
                 <c:set var="activeStatus" value="Blocked"/>
-                <c:set var="activeBtn" value="Activete"/>
+                <c:set var="activeBtn" value="Activate"/>
                 <c:set var="activeStyle" value="color: red;"/>
             </c:otherwise>
         </c:choose>
@@ -103,26 +103,70 @@
             </jsp:include>
 
             <c:forEach items="${tariff.options}" var="option">
-                <jsp:include page="parts/priceCard.jsp">
-                    <jsp:param name="title" value="${option.name}"/>
-                    <jsp:param name="price" value="${option.price}"/>
-                    <jsp:param name="info" value="<p class='card-text'>${option.info}</p>
-                                                  <p class='card-text'>Connection price ${option.connectionPrice}</p>"/>
-                    <jsp:param name="showBtn" value="${true}"/>
-                    <jsp:param name="path" value="/removeOption"/>
-                    <jsp:param name="method" value="post"/>
-                    <jsp:param name="hiddenName1" value="tariffId"/>
-                    <jsp:param name="hiddenValue1" value="${tariff.id}"/>
-                    <jsp:param name="hiddenName2" value="optionId"/>
-                    <jsp:param name="hiddenValue2" value="${option.id}"/>
-                    <jsp:param name="btnName" value="Remove"/>
-                    <jsp:param name="btnStyle" value="btn-link"/>
-                </jsp:include>
-            </c:forEach>
 
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-subtitle">${option.name}</h4>
+                        <h1 class="card-title pricing-card-title">$${option.price} <small class="text-muted">/ mo</small></h1>
+                        <p class='card-text'>${option.info}</p>
+                        <p class='card-text'>Connection price <b>$${option.connectionPrice}</b></p>
+
+
+                        <%----%>
+                        <c:if test="${(option.requiredOptions != null && option.requiredOptions.size() != 0) || (option.incompatibleOptions != null && option.incompatibleOptions.size() != 0)}">
+                            <div class="row">
+                                <div class="col-sm">
+                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#multiCollapseExample${option.id}"
+                                            aria-expanded="false" aria-controls="multiCollapseExample${option.id}"><u>Require</u></button>
+                                </div>
+
+                                <div class="col-sm">
+                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#multiCollapseExample${option.id}"
+                                            aria-expanded="false" aria-controls="multiCollapseExample${option.id}"><u>Incompatible</u></button>
+                                </div>
+                            </div>
+                        </c:if>
+                        <div class="collapse multi-collapse" id="multiCollapseExample${option.id}">
+                            <div class="card card-body">
+                                <div class="row">
+
+                                    <div class="col-sm">
+                                        <c:if test="${option.requiredOptions != null && option.requiredOptions.size() != 0}">
+                                            <ul class="list-group list-group-flush" style="margin-bottom: 5px">
+                                                <c:forEach items="${option.requiredOptions}" var="rOption">
+                                                    <li class="list-group-item">${rOption.name}</li>
+                                                </c:forEach>
+                                            </ul>
+                                        </c:if>
+                                    </div>
+
+                                    <div class="col-sm">
+                                        <c:if test="${option.incompatibleOptions != null && option.incompatibleOptions.size() != 0}">
+                                            <ul class="list-group list-group-flush" style="margin-bottom: 5px">
+                                                <c:forEach items="${option.incompatibleOptions}" var="iOption">
+                                                    <li class="list-group-item">${iOption.name}</li>
+                                                </c:forEach>
+                                            </ul>
+                                        </c:if>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <form action="/removeOption" method="post">
+                            <input name="tariffId" type="hidden" value="${tariff.id}">
+                            <input name="optionId" type="hidden" value="${option.id}">
+                            <button type="submit" class="btn btn-link">Remove</button>
+                        </form>
+                    </div>
+                </div>
+            </c:forEach>
         </div>
 
     </div>
+
     <jsp:include page="parts/footer.jsp"/>
 
 </body>

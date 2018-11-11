@@ -1,14 +1,16 @@
 package com.bilev.controller;
 
-import com.bilev.dto.*;
+import com.bilev.dto.BasicUserDto;
+import com.bilev.dto.UserDto;
 import com.bilev.exception.NotFoundException;
 import com.bilev.exception.UnableToSaveException;
-import com.bilev.service.api.ContractService;
 import com.bilev.service.api.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,22 +26,24 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
-    @Autowired
-    ContractService contractService;
+    @ExceptionHandler(Exception.class)
+    public String handleException(final Exception e) {
+
+        return "forward:/serverError";
+    }
 
     @RequestMapping(value = "/newUser", method = RequestMethod.GET)
     public ModelAndView newUser() {
         return new ModelAndView("editUser", "user", new BasicUserDto());
     }
 
-    @RequestMapping(value = "/addUser", method = RequestMethod.POST)
-    public String addUser(ModelMap model, @Valid @ModelAttribute("user") BasicUserDto user,
+    @RequestMapping(value = "/newUser", method = RequestMethod.POST)
+    public String newUserAction(ModelMap model, @Valid @ModelAttribute("user") BasicUserDto user,
                           BindingResult bindingResult,
-                          RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors())
-            return "editUser";
+                          RedirectAttributes redirectAttributes){
+        if (bindingResult.hasErrors()) return "editUser";
 
         try {
             int userId = userService.saveUser(user);

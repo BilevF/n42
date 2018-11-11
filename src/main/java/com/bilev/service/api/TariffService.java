@@ -39,7 +39,7 @@ public interface TariffService {
 
     void replaceTariff(int originalId, int replacementId) throws NotFoundException, UnableToUpdateException;
 
-    void saveOption(BasicOptionDto optionDto) throws UnableToSaveException;
+    void saveOption(BasicOptionDto optionDto) throws UnableToSaveException, NotFoundException;
 
     void removeOption(int optionId) throws UnableToRemoveException, UnableToUpdateException, NotFoundException;
 

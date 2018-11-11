@@ -31,11 +31,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
 
         http.authorizeRequests()
-                .antMatchers("/account").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
-                .antMatchers("/newTariff").access("hasRole('ROLE_ADMIN')")
-                //.antMatchers("/").access("hasRole('ROLE_CLIENT')")
-                .and().formLogin()//
-                // Submit URL of login page.
+                .antMatchers("/account", "/contract", "/removeContractOption", "/addNewOption" ,
+                        "/addToBasket", "/removeFromBasket", "/clearBasket", "/submitBasket", "/changeTariff",
+                        "/changeContractStatus", "/history", "/addMoney")
+                .access("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+                .antMatchers("/newTariff", "/tariff", "/tariffs", "/newOption", "/removeOption",
+                        "/changeTariffStatus", "/replaceTariff", "/removeTariff", "/findUser", "/allUser", "/user" ,
+                        "/newUser")
+                .access("hasRole('ROLE_ADMIN')")
+
+                .and().formLogin()//.
                 .loginProcessingUrl("/account") // Submit URL
                 .loginPage("/")//
                 .successForwardUrl("/account")

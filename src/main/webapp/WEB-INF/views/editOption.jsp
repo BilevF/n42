@@ -18,7 +18,7 @@
             </div>
         </c:if>
 
-        <form:form action="/addOption" method="post" modelAttribute="option">
+        <form:form action="/newOption" method="post" modelAttribute="option">
             <spring:bind path="name">
                 <div class="form-group">
                     <form:label for="option_name" path="name">option name</form:label>
@@ -82,13 +82,13 @@
                                 <td>${relatedOption.info}</td>
                                 <td>
                                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                        <label class="btn btn-primary active">
+                                        <label class="btn btn-secondary active">
                                             <input type="radio" name="relatedOptions[${i.index}].selectedOptionType" value="NON" autocomplete="off" checked> Non
                                         </label>
-                                        <label class="btn btn-primary">
+                                        <label class="btn btn-secondary">
                                             <input type="radio" name="relatedOptions[${i.index}].selectedOptionType" value="INCOMPATIBLE" autocomplete="off"> INCOMPATIBLE
                                         </label>
-                                        <label class="btn btn-primary">
+                                        <label class="btn btn-secondary">
                                             <input type="radio" name="relatedOptions[${i.index}].selectedOptionType" value="REQUIRED" autocomplete="off"> REQUIRED
                                         </label>
                                     </div>

@@ -2,6 +2,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <html>
 <head>
     <jsp:include page="parts/header.jsp"/>
@@ -17,7 +19,7 @@
             </div>
         </c:if>
 
-        <form:form action="/addTariff" method="post" modelAttribute="tariff">
+        <form:form action="/newTariff" method="post" modelAttribute="tariff">
             <spring:bind path="name">
                 <div class="form-group">
                     <form:label for="tariff_name" path="name">Tariff name</form:label>
@@ -52,10 +54,10 @@
             <div class="form-group">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
                     <label class="btn btn-primary active">
-                        <input type="radio" name="valid" value="true" autocomplete="off" checked> VALID
+                        <input type="radio" name="valid" value="true" autocomplete="off" checked> ACTIVE
                     </label>
                     <label class="btn btn-primary">
-                        <input type="radio" name="valid" value="false" autocomplete="off"> INVALID
+                        <input type="radio" name="valid" value="false" autocomplete="off"> BLOCKED
                     </label>
                 </div>
             </div>

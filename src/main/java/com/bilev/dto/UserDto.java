@@ -1,9 +1,15 @@
 package com.bilev.dto;
 
+import com.bilev.model.Role;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Email;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,5 +18,5 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true, of = {})
 public class UserDto extends BasicUserDto {
 
-    private Set<ContractDto> contracts = new HashSet<>();
+    private Set<BasicContractDto> contracts = new HashSet<>();
 }

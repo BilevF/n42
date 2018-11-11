@@ -15,13 +15,16 @@ import com.bilev.model.Contract;
 import com.bilev.model.Option;
 import com.bilev.model.Tariff;
 import com.bilev.service.api.TariffService;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+
 import java.util.List;
 import java.util.Set;
 
@@ -40,6 +43,21 @@ public class TariffServiceImpl implements TariffService {
     @Autowired
     private ModelMapper modelMapper;
 
+    private TariffDto getTariffDto (Tariff tariff) {
+        TariffDto tariffDto = new TariffDto();
+
+        tariffDto.setId(tariff.getId());
+        tariffDto.setInfo(tariff.getInfo());
+        tariffDto.setName(tariff.getName());
+        tariffDto.setPrice(tariff.getPrice());
+        tariffDto.setValid(tariff.getValid());
+
+        for (Option option : tariff.getOptions()) {
+            tariffDto.getOptions().add(modelMapper.map(option, OptionDto.class));
+        }
+        return tariffDto;
+    }
+
     @Override
     @Transactional(readOnly = true)
     public List<BasicTariffDto> getAllTariffs() {
@@ -54,7 +72,7 @@ public class TariffServiceImpl implements TariffService {
 
         try {
             List<Tariff> tariffs = tariffDao.getAvailableTariffs();
-            Contract contract = contract = contractDao.getByKey(contractId);
+            Contract contract = contractDao.getByKey(contractId);
             tariffs.remove(contract.getTariff());
 
             return modelMapper.map(tariffs, new TypeToken<List<BasicTariffDto>>() {}.getType());
@@ -75,8 +93,9 @@ public class TariffServiceImpl implements TariffService {
     @Transactional(readOnly = true)
     public TariffDto getTariff(int tariffId) throws NotFoundException {
         try {
-            Tariff tariff = tariff = tariffDao.getByKey(tariffId);
-            return modelMapper.map(tariff, TariffDto.class);
+            Tariff tariff = tariffDao.getByKey(tariffId);
+
+            return getTariffDto(tariff);
         } catch (NotFoundException e) {
             throw new NotFoundException("Tariff not found", e);
         }
@@ -136,7 +155,7 @@ public class TariffServiceImpl implements TariffService {
     @Transactional(rollbackFor=Exception.class)
     public void removeTariff(int tariffId) throws NotFoundException, UnableToRemoveException {
         try {
-            Tariff tariff = tariff = tariffDao.getByKey(tariffId);
+            Tariff tariff = tariffDao.getByKey(tariffId);
             if (tariff.getContracts().size() != 0 || tariff.getValid()) {
                 throw new UnableToRemoveException();
             }
@@ -156,7 +175,7 @@ public class TariffServiceImpl implements TariffService {
     public void replaceTariff(int originalId, int replacementId) throws NotFoundException, UnableToUpdateException {
 
         try {
-            Tariff origTariff = origTariff = tariffDao.getByKey(originalId);
+            Tariff origTariff = tariffDao.getByKey(originalId);
             Tariff replTariff = tariffDao.getByKey(replacementId);
 
             if (origTariff.getValid()) {
@@ -175,10 +194,9 @@ public class TariffServiceImpl implements TariffService {
         }
     }
 
-
     @Override
     @Transactional(rollbackFor=Exception.class)
-    public void saveOption(BasicOptionDto optionDto) throws UnableToSaveException {
+    public void saveOption(BasicOptionDto optionDto) throws UnableToSaveException, NotFoundException {
 
         try {
             Option option = modelMapper.map(optionDto, Option.class);
@@ -189,16 +207,18 @@ public class TariffServiceImpl implements TariffService {
 //                }
                 switch (relatedOption.getSelectedOptionType()) {
                     case REQUIRED:
-                        option.getRequiredOptions().add(modelMapper.map(relatedOption, Option.class));
+                        option.getRequiredOptions().add(optionDao.getByKey(relatedOption.getId()));
                         break;
                     case INCOMPATIBLE:
-                        option.getIncompatibleOptions().add(modelMapper.map(relatedOption, Option.class));
+                        option.getIncompatibleOptions().add(optionDao.getByKey(relatedOption.getId()));
                         break;
                 }
             }
             optionDao.saveOrUpdate(option);
         } catch (UnableToSaveException e) {
             throw new UnableToSaveException("Option name is not unique / fields are empty", e);
+        } catch (NotFoundException e) {
+            throw new NotFoundException("One of the related options has been removed", e);
         }
     }
 

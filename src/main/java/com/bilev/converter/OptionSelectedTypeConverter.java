@@ -9,7 +9,7 @@ public class OptionSelectedTypeConverter implements Converter<String, BasicOptio
         try {
             return BasicOptionDto.SelectedOptionType.valueOf(source);
         } catch(Exception e) {
-            return BasicOptionDto.SelectedOptionType.NON; // or SortEnum.asc
+            return BasicOptionDto.SelectedOptionType.NON;
         }
     }
 }

@@ -18,7 +18,7 @@
             </div>
         </c:if>
 
-        <form:form action="/addUser" method="post" modelAttribute="user">
+        <form:form action="/newUser" method="post" modelAttribute="user">
             <spring:bind path="firstName">
                 <div class="form-group">
                     <form:label for="firstName" path="firstName">First name</form:label>

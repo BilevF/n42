@@ -8,24 +8,24 @@
             <img src="${param.imgPath}" class="img-fluid" alt="" style="display: block;margin-left: auto;margin-right: auto;">
         </div>
 
-        <div class="col-sm-6" style="padding-bottom: 10px; padding-top: 10px">
+        <div class="col-sm-6" style="margin: auto;">
             <h4 class="card-title" style="text-align:left;">
-                <b>${param.name1}</b>
+                ${param.name1}
                 <span style="float:right;">${param.value1}</span>
             </h4><hr>
 
             <h4 class="card-title" style="text-align:left;">
-                <b>${param.name2}</b>
+                ${param.name2}
                 <span style="float:right;">${param.value2}</span>
             </h4><hr>
 
             <h4 class="card-title" style="text-align:left;">
-                <b>${param.name3}</b>
+                ${param.name3}
                 <span style="float:right;">${param.value3}</span>
             </h4><hr>
 
             <h4 class="card-title" style="text-align:left;">
-                <b>${param.name4}</b>
+                ${param.name4}  
                 <span style="float:right; ${param.value4Style}">${param.value4}</span>
             </h4>
 

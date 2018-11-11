@@ -1,6 +1,11 @@
 package com.bilev.controller;
 
-import com.bilev.dto.*;
+import com.bilev.dto.BasicContractDto;
+import com.bilev.dto.BasicOptionDto;
+import com.bilev.dto.ContractDto;
+import com.bilev.dto.UserDto;
+import com.bilev.dto.HistoryDto;
+import com.bilev.exception.AccessException;
 import com.bilev.exception.NotFoundException;
 import com.bilev.exception.UnableToSaveException;
 import com.bilev.exception.UnableToUpdateException;
@@ -12,11 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -26,13 +33,44 @@ import java.util.Collection;
 public class ContractController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    ContractService contractService;
+    private ContractService contractService;
 
     @Autowired
     private TariffService tariffService;
+
+    @ExceptionHandler(AccessException.class)
+    public String handleAllException(AccessException e) {
+        //redirectAttributes.addFlashAttribute("exception", e.getMessage());
+        return "redirect:/account";
+    }
+
+    @ExceptionHandler(Exception.class)
+    public String handleException(final Exception e) {
+
+        return "forward:/serverError";
+    }
+
+    private boolean hasAccess(Principal principal, int contractId) throws NotFoundException {
+        try {
+            UserDto user = userService.getUserByEmail(principal.getName());
+            ContractDto contractDto = contractService.getContract(contractId);
+            return  user.getRoleRoleName() == Role.RoleName.ROLE_ADMIN || user.getId().equals(contractDto.getUserId());
+        } catch (NotFoundException e) {
+            throw new NotFoundException("Contract not found");
+        }
+    }
+
+    private boolean hasAccess(Principal principal, ContractDto contractDto) throws NotFoundException {
+        try {
+            UserDto user = userService.getUserByEmail(principal.getName());
+            return  user.getRoleRoleName() == Role.RoleName.ROLE_ADMIN || user.getId().equals(contractDto.getUserId());
+        } catch (NotFoundException e) {
+            throw new NotFoundException("User not found");
+        }
+    }
 
     @RequestMapping(value = "/newContract", method = RequestMethod.GET)
     public String newContract(ModelMap model, @RequestParam("userId") Integer userId) {
@@ -45,8 +83,8 @@ public class ContractController {
     }
 
 
-    @RequestMapping(value = "/addContract", method = RequestMethod.POST)
-    public String addContract(@Valid @ModelAttribute("contract") BasicContractDto contract,
+    @RequestMapping(value = "/newContract", method = RequestMethod.POST)
+    public String newContractAction(@Valid @ModelAttribute("contract") BasicContractDto contract,
                               BindingResult bindingResult,
                               ModelMap model,
                               RedirectAttributes redirectAttributes) {
@@ -59,7 +97,7 @@ public class ContractController {
             userService.saveContract(contract);
             redirectAttributes.addAttribute("userId", contract.getUserId());
             return "redirect:/user";
-        } catch (UnableToSaveException e) {
+        } catch (UnableToSaveException | NotFoundException e) {
             model.addAttribute("exception", e.getMessage());
             model.addAttribute("tariffs", tariffService.getAvailableTariffs());
             return "editContract";
@@ -70,13 +108,11 @@ public class ContractController {
     @RequestMapping(value = "/contract", method = RequestMethod.GET)
     public String contract(ModelMap model, @RequestParam("contractId") Integer contractId,
                            Principal principal,
-                           RedirectAttributes redirectAttributes) {
+                           RedirectAttributes redirectAttributes) throws AccessException {
         try {
-            UserDto user = userService.getUserByEmail(principal.getName());
             ContractDto contractDto = contractService.getContract(contractId);
 
-            if (user.getRoleRoleName() == Role.RoleName.ROLE_CLIENT && !user.getId().equals(contractDto.getUserId()))
-                return "redirect:/account";
+            if (!hasAccess(principal, contractDto)) throw new AccessException("Access denied");
 
             Collection<BasicOptionDto> optionsDto = contractService.getAvailableOptionsForContract(contractId);
             model.addAttribute("availableOptions", optionsDto);
@@ -94,8 +130,10 @@ public class ContractController {
     public String removeContractOption(ModelMap model, @RequestParam("contractId") Integer contractId,
                                        @RequestParam("optionId") Integer optionId,
                                        Principal principal,
-                                       RedirectAttributes redirectAttributes) {
+                                       RedirectAttributes redirectAttributes) throws AccessException {
         try {
+            if (!hasAccess(principal, contractId)) throw new AccessException("Access denied");
+
             contractService.removeOptionFromContract(contractId, optionId);
         } catch (NotFoundException | UnableToUpdateException e) {
             redirectAttributes.addFlashAttribute("exception", e.getMessage());
@@ -107,31 +145,30 @@ public class ContractController {
     @RequestMapping(value = "/addNewOption", method = RequestMethod.GET)
     public String addNewOption(ModelMap model, @RequestParam("contractId") Integer contractId,
                                Principal principal,
-                               RedirectAttributes redirectAttributes) {
+                               RedirectAttributes redirectAttributes) throws AccessException {
 
         try {
-            UserDto user = userService.getUserByEmail(principal.getName());//TODO not found
             ContractDto contractDto = contractService.getContract(contractId);
-
-            if (user.getRoleRoleName() == Role.RoleName.ROLE_CLIENT && !user.getId().equals(contractDto.getUserId()))
-                return "redirect:/account";
-
+            if (!hasAccess(principal, contractId)) throw new AccessException("Access denied");
 
             Collection<BasicOptionDto> optionsDto = contractService.getAvailableOptionsForContract(contractId);
             model.addAttribute("availableOptions", optionsDto);
             model.addAttribute("contract", contractDto);
             return "optionsBasket";
-        } catch (NotFoundException e) {
+        } catch (NotFoundException  e) {
             redirectAttributes.addFlashAttribute("exception", e.getMessage());
-            return "redirect:/account";
+            redirectAttributes.addAttribute("contractId", contractId);
+            return "redirect:/contract";
         }
     }
 
     @RequestMapping(value = "/addToBasket", method = RequestMethod.POST)
     public String addToBasket(@RequestParam("contractId") Integer contractId,
                               @RequestParam("optionId") Integer optionId,
-                              RedirectAttributes redirectAttributes) {
+                              RedirectAttributes redirectAttributes,
+                              Principal principal) throws AccessException {
         try {
+            if (!hasAccess(principal, contractId)) throw new AccessException("Access denied");
             contractService.addOptionToBasket(contractId, optionId);
         } catch (NotFoundException | UnableToUpdateException e) {
             redirectAttributes.addFlashAttribute("exception", e.getMessage());
@@ -143,9 +180,11 @@ public class ContractController {
     @RequestMapping(value = "/removeFromBasket", method = RequestMethod.POST)
     public String removeFromBasket(@RequestParam("contractId") Integer contractId,
                                    @RequestParam("optionId") Integer optionId,
-                                   RedirectAttributes redirectAttributes) {
+                                   RedirectAttributes redirectAttributes,
+                                   Principal principal) throws AccessException {
 
         try {
+            if (!hasAccess(principal, contractId)) throw new AccessException("Access denied");
             contractService.removeOptionFromBasket(contractId, optionId);
         } catch (NotFoundException | UnableToUpdateException e) {
             redirectAttributes.addFlashAttribute("exception", e.getMessage());
@@ -156,9 +195,11 @@ public class ContractController {
 
     @RequestMapping(value = "/clearBasket", method = RequestMethod.POST)
     public String clearBasket(@RequestParam("contractId") Integer contractId,
-                              RedirectAttributes redirectAttributes) {
+                              RedirectAttributes redirectAttributes,
+                              Principal principal) throws AccessException {
 
         try {
+            if (!hasAccess(principal, contractId)) throw new AccessException("Access denied");
             contractService.clearBasket(contractId);
         } catch (NotFoundException | UnableToUpdateException e) {
             redirectAttributes.addFlashAttribute("exception", e.getMessage());
@@ -170,9 +211,11 @@ public class ContractController {
 
     @RequestMapping(value = "/submitBasket", method = RequestMethod.POST)
     public String submitBasket(@RequestParam("contractId") Integer contractId,
-                               RedirectAttributes redirectAttributes) {
+                               RedirectAttributes redirectAttributes,
+                               Principal principal) throws AccessException {
 
         try {
+            if (!hasAccess(principal, contractId)) throw new AccessException("Access denied");
             contractService.submitBasket(contractId);
             redirectAttributes.addAttribute("contractId", contractId);
             return "redirect:/contract";
@@ -183,11 +226,13 @@ public class ContractController {
         }
     }
 
-    @RequestMapping(value = "/selectTariff", method = RequestMethod.GET)
-    public String selectTariff(ModelMap model,
+    @RequestMapping(value = "/changeTariff", method = RequestMethod.GET)
+    public String changeTariff(ModelMap model,
                                @RequestParam("contractId") Integer contractId,
-                               RedirectAttributes redirectAttributes) {
+                               RedirectAttributes redirectAttributes,
+                               Principal principal) throws AccessException {
         try {
+            if (!hasAccess(principal, contractId)) throw new AccessException("Access denied");
             model.addAttribute("tariffs", tariffService.getAvailableTariffs(contractId));
         } catch (NotFoundException e) {
             redirectAttributes.addFlashAttribute("exception", e.getMessage());
@@ -204,17 +249,19 @@ public class ContractController {
     }
 
     @RequestMapping(value = "/changeTariff", method = RequestMethod.POST)
-    public String changeTariff(@RequestParam("contractId") Integer contractId,
+    public String changeTariffAction(@RequestParam("contractId") Integer contractId,
                                @RequestParam("tariffId") Integer tariffId,
-                               RedirectAttributes redirectAttributes) {
+                               RedirectAttributes redirectAttributes,
+                               Principal principal) throws AccessException {
         try {
+            if (!hasAccess(principal, contractId)) throw new AccessException("Access denied");
             contractService.changeContractTariff(contractId, tariffId);
             redirectAttributes.addAttribute("contractId", contractId);
             return "redirect:/contract";
         } catch (NotFoundException | UnableToUpdateException e) {
             redirectAttributes.addFlashAttribute("exception", e.getMessage());
             redirectAttributes.addAttribute("contractId", contractId);
-            return "redirect:/selectTariff";
+            return "redirect:/changeTariff";
         }
 
     }
@@ -222,9 +269,10 @@ public class ContractController {
     @RequestMapping(value = "/changeContractStatus", method = RequestMethod.POST)
     public String changeContractStatus(@RequestParam("contractId") Integer contractId,
                                        Principal principal,
-                                       RedirectAttributes redirectAttributes) {
+                                       RedirectAttributes redirectAttributes) throws AccessException {
 
         try {
+            if (!hasAccess(principal, contractId)) throw new AccessException("Access denied");
             UserDto user = userService.getUserByEmail(principal.getName());
             contractService.changeBlockStatus(user.getId(), contractId);
             redirectAttributes.addAttribute("contractId", contractId);
@@ -241,8 +289,9 @@ public class ContractController {
     public String history(@RequestParam("contractId") Integer contractId,
                           Principal principal,
                           ModelMap model,
-                          RedirectAttributes redirectAttributes) {
+                          RedirectAttributes redirectAttributes) throws AccessException {
         try {
+            if (!hasAccess(principal, contractId)) throw new AccessException("Access denied");
             Collection<HistoryDto> history = contractService.getContractHistory(contractId);
             model.addAttribute("history", history);
             return "history";
@@ -256,10 +305,13 @@ public class ContractController {
     public String addMoney(@RequestParam("contractId") Integer contractId,
                           Principal principal,
                           ModelMap model,
-                          RedirectAttributes redirectAttributes) {
+                          RedirectAttributes redirectAttributes) throws AccessException {
 
         try {
             ContractDto contract = contractService.getContract(contractId);
+
+            if (!hasAccess(principal, contract)) throw new AccessException("Access denied");
+
             model.addAttribute("contract", contract);
             return "addMoney";
         } catch (NotFoundException e) {
@@ -273,9 +325,10 @@ public class ContractController {
                                  @RequestParam("moneyValue") Integer moneyValue,
                            Principal principal,
                            ModelMap model,
-                           RedirectAttributes redirectAttributes) {
+                           RedirectAttributes redirectAttributes) throws AccessException {
 
         try {
+            if (!hasAccess(principal, contractId)) throw new AccessException("Access denied");
             contractService.addMoney(contractId, moneyValue);
             redirectAttributes.addAttribute("contractId", contractId);
             return "redirect:/contract";

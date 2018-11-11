@@ -19,7 +19,7 @@
             </div>
         </c:if>
 
-        <form:form action="/addContract" method="post" modelAttribute="contract">
+        <form:form action="/newContract" method="post" modelAttribute="contract">
 
             <input name="balance" type="hidden" value="${contract.balance}">
             <input name="userId" type="hidden" value="${contract.userId}">

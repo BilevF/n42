@@ -2,7 +2,6 @@ package com.bilev.controller;
 
 import com.bilev.dto.BasicOptionDto;
 import com.bilev.dto.BasicTariffDto;
-import com.bilev.dto.OptionDto;
 import com.bilev.dto.TariffDto;
 import com.bilev.exception.NotFoundException;
 import com.bilev.exception.UnableToRemoveException;
@@ -13,28 +12,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.List;
 
 @Controller
-@SessionAttributes("roles")
 public class TariffController {
 
     @Autowired
     private TariffService tariffService;
 
+    @ExceptionHandler(Exception.class)
+    public String handleException(final Exception e) {
+
+        return "forward:/serverError";
+    }
+
     @RequestMapping(value = "/newTariff")
-    public ModelAndView newTariffPage() {
+    public ModelAndView newTariff() {
         return new ModelAndView("editTariff", "tariff", new BasicTariffDto());
     }
 
-    @RequestMapping(value = "/addTariff", method = RequestMethod.POST)
-    public String addTariff(ModelMap model, @Valid @ModelAttribute("tariff") BasicTariffDto tariff,
+    @RequestMapping(value = "/newTariff", method = RequestMethod.POST)
+    public String newTariffAction(ModelMap model, @Valid @ModelAttribute("tariff") BasicTariffDto tariff,
                             BindingResult bindingResult,
                             RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors())
@@ -77,11 +85,11 @@ public class TariffController {
     }
 
     @RequestMapping(value = "/newOption")
-    public String newOptionPage(ModelMap model, @RequestParam("tariffId") Integer tariffId,
+    public String newOption(ModelMap model, @RequestParam("tariffId") Integer tariffId,
                                 RedirectAttributes redirectAttributes) {
 
         try {
-            BasicOptionDto option = new OptionDto();
+            BasicOptionDto option = new BasicOptionDto();
             option.setTariffId(tariffId);
             option.setRelatedOptions(new ArrayList<>(tariffService.getBasicTariffOptions(tariffId)));
             model.addAttribute("option", option);
@@ -94,8 +102,8 @@ public class TariffController {
 
     }
 
-    @RequestMapping(value = "/addOption", method = RequestMethod.POST)
-    public String addOption(@Valid @ModelAttribute("option") BasicOptionDto option,
+    @RequestMapping(value = "/newOption", method = RequestMethod.POST)
+    public String newOptionAction(@Valid @ModelAttribute("option") BasicOptionDto option,
                             BindingResult bindingResult,
                             RedirectAttributes redirectAttributes,
                             ModelMap model) {
@@ -108,13 +116,12 @@ public class TariffController {
 
             try {
                 tariffService.saveOption(option);
-            } catch (UnableToSaveException e) {
+            } catch (UnableToSaveException | NotFoundException e) {
                 option.setRelatedOptions(new ArrayList<>(tariffService.getBasicTariffOptions(option.getTariffId())));
                 model.addAttribute("option", option);
                 model.addAttribute("exception", e.getMessage());
                 return "editOption";
             }
-
             redirectAttributes.addAttribute("tariffId", option.getTariffId());
             return "redirect:/tariff";
 

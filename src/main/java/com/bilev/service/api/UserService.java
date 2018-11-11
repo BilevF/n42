@@ -21,6 +21,6 @@ public interface UserService {
 
     int saveUser(BasicUserDto basicUserDto) throws UnableToSaveException;
 
-    int saveContract(BasicContractDto contractDto) throws UnableToSaveException;
+    int saveContract(BasicContractDto contractDto) throws UnableToSaveException, NotFoundException;
 
 }

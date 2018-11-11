@@ -29,7 +29,7 @@
         </jsp:include>
 
         <jsp:include page="parts/info.jsp">
-            <jsp:param name="imgPath" value="/resources/images/client2.png"/>
+            <jsp:param name="imgPath" value="/resources/images/admin.png"/>
 
             <jsp:param name="name1" value="Email"/>
             <jsp:param name="name2" value="Birth date"/>
@@ -54,43 +54,43 @@
             <jsp:param name="showBtn4" value="${false}"/>
         </jsp:include>
 
+        <jsp:include page="parts/separator.jsp">
+            <jsp:param name="name" value="Admin workspace"/>
+        </jsp:include>
 
-        <div class="card">
-            <div class="row">
+        <div class="card-deck text-center">
 
-                <div class="col-sm-5">
-                    <img src="/resources/images/user.png" class="img-fluid" alt="">
-                </div>
-                <div class="col-sm-7">
-                    <div class="card-block px-2" style="padding-bottom: 5%; margin-right: 5%">
-                        <h2 style="margin-bottom: 20px"><b>Admin workspace</b></h2>
-                        <h4>Manage users</h4>
-                        <form action="/findUser" method="post">
-                            <div class="input-group">
-                                <input type="text" class="form-control" name="phone" placeholder="Phone">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-primary" type="submit">Find client</button>
-                                </span>
-                            </div>
-                        </form>
-                        <a href="/newUser" class="btn btn-primary btn-mg" style="margin-top: 12px">Create new</a>
-                        <a href="/allUser" class="btn btn-light btn-mg" style="margin-top: 12px">Show all</a>
-                        <hr class="my-4">
-                        <h4>Manage tariffs</h4>
-                        <form>
-                            <div class="input-group">
-                                <input type="text" class="form-control" name="user_info" placeholder="Tariff name">
-                                <span class="input-group-btn">
-                            <button class="btn btn-primary" type="button">Find tariff</button>
-                        </span>
-                            </div>
-                        </form>
+            <div class="card mb-4 shadow-sm card-body">
+                <h3 class="card-title">Tariffs</h3>
 
-                        <a href="/newTariff" class="btn btn-primary btn-mg" style="margin-top: 12px">Create new</a>
-                        <a href="/tariffs" class="btn btn-light btn-mg" style="margin-top: 12px">Show all</a>
-                    </div>
-                </div>
+                <p><small class='text-muted'>Create new tariffs or manage existing ones</small></p>
+
+                <h3><a href="/newTariff" class="btn btn-primary btn-mg" style="margin-top: 12px">Create new</a>
+                <a href="/tariffs" class="btn btn-primary btn-mg" style="margin-top: 12px">Show all</a></h3>
             </div>
+
+            <div class="card mb-4 shadow-sm card-body">
+                <h3 class="card-title">Find client</h3>
+
+                <br>
+
+                <form action="/findUser" method="post">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="phone" placeholder="Phone">
+                        <span class="input-group-btn">
+                                <button class="btn btn-primary" type="submit">Find client</button>
+                            </span>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card mb-4 shadow-sm card-body">
+                <h3 class="card-title">Users</h3>
+                <p><small class='text-muted'>Create new users or manage existing ones</small></p>
+                <h3><a href="/newUser" class="btn btn-primary btn-mg " style="margin-top: 12px">Create new</a>
+                <a href="/allUser" class="btn btn-primary btn-mg" style="margin-top: 12px">Show all</a></h3>
+            </div>
+
         </div>
 
 

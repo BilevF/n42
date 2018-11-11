@@ -9,7 +9,7 @@ public class BlockConverter implements Converter<String, Block.BlockType> {
         try {
             return Block.BlockType.valueOf(source);
         } catch(Exception e) {
-            return null; // or SortEnum.asc
+            return Block.BlockType.NON;
         }
     }
 }

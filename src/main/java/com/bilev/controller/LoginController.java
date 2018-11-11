@@ -20,6 +20,12 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
+    @ExceptionHandler(Exception.class)
+    public String handleException(final Exception e) {
+
+        return "forward:/serverError";
+    }
+
     @RequestMapping(value = "/account", method = RequestMethod.POST)
     public String validateUsr() {
         return "redirect:/account";
@@ -28,7 +34,7 @@ public class LoginController {
     @RequestMapping(value = "/account", method = RequestMethod.GET)
     public String validateUsr(ModelMap model, Principal principal) {
 
-        UserDto user = null;
+        UserDto user;
         try {
             user = userService.getUserByEmail(principal.getName());
         } catch (NotFoundException e) {

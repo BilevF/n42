@@ -13,7 +13,7 @@
 
     <jsp:include page="parts/welcom.jsp">
         <jsp:param name="name" value="Phone number: ${contract.phoneNumber}"/>
-        <jsp:param name="secondName" value="Balance: ${contract.balance}"/>
+        <jsp:param name="secondName" value="Balance: $${contract.balance}"/>
         <jsp:param name="massage" value="<p>Welcome to the home page of contract management</p>"/>
 
     </jsp:include>
@@ -45,7 +45,7 @@
             </c:when>
             <c:otherwise>
                 <c:set var="activeStatus" value="Blocked"/>
-                <c:set var="activeBtn" value="Activete"/>
+                <c:set var="activeBtn" value="Activate"/>
                 <c:set var="activeStyle" value="color: red;"/>
             </c:otherwise>
         </c:choose>
@@ -65,7 +65,7 @@
             <jsp:param name="value4Style" value="${activeStyle}"/>
 
             <jsp:param name="showBtn1" value="${contract.blockType == 'NON'}"/>
-            <jsp:param name="btn1Path" value="/selectTariff"/>
+            <jsp:param name="btn1Path" value="/changeTariff"/>
             <jsp:param name="btn1HiddenName" value="contractId"/>
             <jsp:param name="btn1HiddenValue" value="${contract.id}"/>
             <jsp:param name="btn1Name" value="Change tariff"/>

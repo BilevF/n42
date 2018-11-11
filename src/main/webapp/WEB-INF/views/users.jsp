@@ -9,6 +9,13 @@
 <body class="bg-light">
 
     <jsp:include page="parts/navbar.jsp"/>
+
+    <jsp:include page="parts/welcom.jsp">
+        <jsp:param name="name" value="N42 Clients"/>
+        <jsp:param name="massage" value=""/>
+        <jsp:param name="secondName" value=""/>
+    </jsp:include>
+
     <div class="container" style="max-width: 960px;">
 
         <c:if test="${not empty exception}">
