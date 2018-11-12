@@ -74,7 +74,7 @@
 
     <br>
 
-    <div class="container marketing">
+    <div class="container marketing" style="max-width: 960px;">
         <hr class="featurette-divider">
 
         <div class="row featurette">

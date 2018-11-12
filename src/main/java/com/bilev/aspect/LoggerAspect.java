@@ -11,6 +11,8 @@ public class LoggerAspect {
     private static final Logger LOG = Logger.getLogger(LoggerAspect.class);
 
 
+
+
     @Before("execution(* com.bilev..*(..))")
     public void logBeforeWithArgs(JoinPoint joinPoint) {
 
@@ -41,4 +43,12 @@ public class LoggerAspect {
         LOG.debug("Method : " + joinPoint.getSignature().getName() + "completed");
     }
 
+    @AfterThrowing(
+            pointcut="execution(* com.bilev..*(..))",
+            throwing="exec")
+    public void catchAllException(Exception exec) {
+
+        System.out.println("Exception has been caught : " + exec);
+        System.out.println("Message : " + exec.getMessage());
+    }
 }

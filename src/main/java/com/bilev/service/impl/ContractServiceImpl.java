@@ -167,6 +167,8 @@ public class ContractServiceImpl implements ContractService {
 
         if (contract.getBlock().getBlockType() != Block.BlockType.NON) throw new AccessException("Access denied");
 
+        if (!tariff.getValid()) throw new UnableToUpdateException("Tariff '" + tariff.getName() + "' is currently unavailable");
+
         try {
             if (contract.getTariff().equals(tariff)) {
                 throw new UnableToUpdateException();
@@ -201,7 +203,7 @@ public class ContractServiceImpl implements ContractService {
 
         try {
             if (contract.getOptions().contains(option))
-                throw new UnableToUpdateException("Option's already added");
+                throw new UnableToUpdateException("Option's been already added");
 
             if (contract.getBasket().contains(option)) {
                 return;
@@ -327,7 +329,7 @@ public class ContractServiceImpl implements ContractService {
             History history = new History();
             history.setDate(new Date());
             history.setName(option.getName());
-            history.setPrice(option.getPrice());
+            history.setPrice(option.getConnectionPrice());
             history.setContract(contract);
             historyDao.save(history);
         }

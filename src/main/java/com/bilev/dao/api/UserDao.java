@@ -9,6 +9,8 @@ public interface UserDao extends AbstractDao<Integer, User> {
 
     User findByEmail(String email) throws NotFoundException;
 
+    User findClientByEmail(String email) throws NotFoundException;
+
     List<User> getAllUsers();
 
 }

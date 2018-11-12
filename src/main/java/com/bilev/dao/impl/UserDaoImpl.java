@@ -22,6 +22,19 @@ public class UserDaoImpl extends AbstractDaoImpl<Integer, User> implements UserD
         return user;
     }
 
+    @Override
+    public User findClientByEmail(String email) throws NotFoundException {
+        Criteria criteria = createEntityCriteria();
+
+        criteria
+                .createAlias("role", "role")
+                .add(Restrictions.eq("role.roleName", Role.RoleName.ROLE_CLIENT))
+                .add(Restrictions.eq("email", email));
+        User user = (User) criteria.uniqueResult();
+        if (user == null) throw new NotFoundException("User not found");
+        return user;
+    }
+
 
     @Override
     @SuppressWarnings("unchecked")

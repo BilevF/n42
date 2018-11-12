@@ -175,18 +175,18 @@ public class TariffServiceImpl implements TariffService {
     public void replaceTariff(int originalId, int replacementId) throws NotFoundException, UnableToUpdateException {
 
         try {
-            Tariff origTariff = tariffDao.getByKey(originalId);
-            Tariff replTariff = tariffDao.getByKey(replacementId);
+            Tariff originalTariff = tariffDao.getByKey(originalId);
+            Tariff replacementTariff = tariffDao.getByKey(replacementId);
 
-            if (origTariff.getValid()) {
+            if (originalTariff.getValid()) {
                 throw new UnableToUpdateException();
             }
-            for (Contract contract : origTariff.getContracts()) {
-                contract.setTariff(replTariff);
+            for (Contract contract : originalTariff.getContracts()) {
+                contract.setTariff(replacementTariff);
                 contract.getOptions().clear();
                 contract.getBasket().clear();
             }
-            contractDao.updateAll(origTariff.getContracts());
+            contractDao.updateAll(originalTariff.getContracts());
         } catch (NotFoundException e) {
             throw new NotFoundException("Tariff not found", e);
         } catch (UnableToUpdateException e) {
@@ -213,6 +213,7 @@ public class TariffServiceImpl implements TariffService {
                         option.getIncompatibleOptions().add(optionDao.getByKey(relatedOption.getId()));
                         break;
                 }
+
             }
             optionDao.saveOrUpdate(option);
         } catch (UnableToSaveException e) {

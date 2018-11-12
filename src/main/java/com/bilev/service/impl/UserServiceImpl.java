@@ -59,6 +59,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
+    public UserDto getClientByEmail(String email) throws NotFoundException {
+        User user = userDao.findClientByEmail(email);
+
+        return modelMapper.map(user, UserDto.class);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public UserDto getUserById(int userId) throws NotFoundException {
         try {
             User user = user = userDao.getByKey(userId);

@@ -13,6 +13,8 @@ import java.util.List;
 public interface UserService {
     UserDto getUserByEmail(String email) throws NotFoundException;
 
+    UserDto getClientByEmail(String email) throws NotFoundException;
+
     UserDto getUserById(int userId) throws NotFoundException;
 
     List<BasicUserDto> getAllUsers();

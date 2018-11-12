@@ -20,4 +20,6 @@ public class OptionDto extends BasicOptionDto {
     private Set<BasicOptionDto> requiredOptions = new HashSet<>();
 
     private Set<BasicOptionDto> incompatibleOptions = new HashSet<>();
+
+    private Set<BasicOptionDto> incompatibleOptionsOf = new HashSet<>();
 }

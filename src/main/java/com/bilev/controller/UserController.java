@@ -85,7 +85,7 @@ public class UserController {
             userId = userService.findUserByPhone(phoneOrEmail);
         } catch (NotFoundException e) {
             try {
-                userId = userService.getUserByEmail(phoneOrEmail).getId();
+                userId = userService.getClientByEmail(phoneOrEmail).getId();
             } catch (NotFoundException e1) {
                 redirectAttributes.addFlashAttribute("exception", e.getMessage());
                 return "redirect:/account";

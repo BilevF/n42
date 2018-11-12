@@ -121,7 +121,9 @@
 
 
                         <%----%>
-                        <c:if test="${(option.requiredOptions != null && option.requiredOptions.size() != 0) || (option.incompatibleOptions != null && option.incompatibleOptions.size() != 0)}">
+                        <c:if test="${(option.requiredOptions != null && option.requiredOptions.size() != 0) ||
+                                      (option.incompatibleOptions != null && option.incompatibleOptions.size() != 0) ||
+                                      (option.incompatibleOptionsOf != null && option.incompatibleOptionsOf.size() != 0)}">
                             <div class="row">
                                 <div class="col-sm">
                                     <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#multiCollapseExample${option.id}"
@@ -149,9 +151,13 @@
                                     </div>
 
                                     <div class="col-sm">
-                                        <c:if test="${option.incompatibleOptions != null && option.incompatibleOptions.size() != 0}">
+                                        <c:if test="${(option.incompatibleOptions != null && option.incompatibleOptions.size() != 0) ||
+                                                      (option.incompatibleOptionsOf != null && option.incompatibleOptionsOf.size() != 0)}">
                                             <ul class="list-group list-group-flush" style="margin-bottom: 5px">
                                                 <c:forEach items="${option.incompatibleOptions}" var="iOption">
+                                                    <li class="list-group-item">${iOption.name}</li>
+                                                </c:forEach>
+                                                <c:forEach items="${option.incompatibleOptionsOf}" var="iOption">
                                                     <li class="list-group-item">${iOption.name}</li>
                                                 </c:forEach>
                                             </ul>

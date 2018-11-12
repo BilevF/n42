@@ -1,6 +1,6 @@
 package com.bilev.exception;
 
-public class UnableToSaveException extends RuntimeException  {
+public class UnableToSaveException extends Exception  {
     public UnableToSaveException() { super(); }
     public UnableToSaveException(String message) { super(message); }
     public UnableToSaveException(String message, Throwable cause) { super(message, cause); }

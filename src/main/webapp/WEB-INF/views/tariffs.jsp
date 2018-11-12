@@ -25,15 +25,6 @@
             </div>
         </c:if>
 
-        <sec:authorize access="hasRole('ROLE_ADMIN')">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/account">Account</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Tariffs</li>
-                </ol>
-            </nav>
-        </sec:authorize>
-
         <div class="card-columns mb-3 text-center">
 
             <c:forEach items="${tariffs}" var="tariff">

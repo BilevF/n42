@@ -28,7 +28,12 @@
 
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/account">Account</a></li>
+                <sec:authorize access="hasRole('ROLE_ADMIN')">
+                    <li class="breadcrumb-item"><a href="/user?userId=${contract.userId}">Client</a></li>
+                </sec:authorize>
+                <sec:authorize access="hasRole('ROLE_CLIENT')">
+                    <li class="breadcrumb-item"><a href="/account">Account</a></li>
+                </sec:authorize>
                 <li>
                     <a href="/contract?contractId=${contract.id}">Contract</a>
                 </li>

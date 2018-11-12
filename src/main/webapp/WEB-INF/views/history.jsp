@@ -1,6 +1,7 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html>
 <head>
     <jsp:include page="parts/header.jsp"/>
@@ -19,7 +20,12 @@
 
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/account">Account</a></li>
+                <sec:authorize access="hasRole('ROLE_ADMIN')">
+                    <li class="breadcrumb-item"><a href="/user?userId=${contract.userId}">Client</a></li>
+                </sec:authorize>
+                <sec:authorize access="hasRole('ROLE_CLIENT')">
+                    <li class="breadcrumb-item"><a href="/account">Account</a></li>
+                </sec:authorize>
                 <li>
                     <a href="/contract?contractId=${contractId}">Contract</a>
                 </li>

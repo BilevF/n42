@@ -81,7 +81,7 @@
 
             <spring:bind path="password">
                 <div class="form-group">
-                    <form:label for="password" path="password">Email</form:label>
+                    <form:label for="password" path="password">Password</form:label>
                     <form:input type="password" path="password" autocomplete="false" class="form-control ${status.error ? 'is-invalid' : ''}" id="password" placeholder=""/>
                     <div class="invalid-feedback">
                         <form:errors path="password" cssClass="error"/>
