@@ -1,0 +1,17 @@
+
+.container {
+    max-width: 960px;
+}
+
+.hidden {
+    visibility: hidden;
+    /*display: none;*/
+}
+
+body {
+    margin-top: 100px;
+    font-family: 'Noto Sans', sans-serif;
+
+}
+
+

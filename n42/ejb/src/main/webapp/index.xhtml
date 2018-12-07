@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+    <h:head>
+        <h1><h:outputText value="jsf-ejb example" /></h1>
+    </h:head>
+
+    <h:body>
+        <h:form id="form">
+
+            <h:dataTable value="#{HelloJSFBean.tariffs}" var="o" id="table">
+
+                <h:column>
+                    <!-- column header -->
+                    <f:facet name="header">Name</f:facet>
+                    <!-- row record -->
+                    #{o.name}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Price</f:facet>
+                    #{o.price}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Info</f:facet>
+                    #{o.info}
+                </h:column>
+
+            </h:dataTable>
+
+            <p:poll widgetVar="poll" interval="1" update="table" stop="#{HelloJSFBean.stop}"
+                    listener="#{HelloJSFBean.listener}" onstart="onStartPoll();"/>
+
+
+            <h:outputText value="#{HelloJSFBean.hasData}" id="hasDataVal"/>
+
+            <p:poll interval="1" update="hasDataVal"/>
+
+
+            <script type="text/javascript">
+                function onStartPoll() {
+                    var timer = setInterval(function() {
+                        var hasData = document.getElementById("form:hasDataVal").innerText;
+                        // alert(hasData);
+                        if (hasData == "true") {
+                            PF("poll").start();
+                            clearInterval(timer);
+                        }
+                    }, 3000);
+                }
+            </script>
+
+        </h:form>
+    </h:body>
+</ui:composition>
+</html>
