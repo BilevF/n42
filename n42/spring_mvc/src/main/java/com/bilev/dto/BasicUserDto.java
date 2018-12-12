@@ -18,34 +18,36 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true, of = {})
 public class BasicUserDto extends AbstractDto {
 
-    @NotNull
-    @Size(min=2, max=45)
+    @NotNull(message = "{NotNull.user.firstName}")
+    @Size(min=2, max=45, message = "{Size.user.firstName}")
     private String firstName;
 
-    @NotNull
-    @Size(min=2, max=45)
+    @NotNull(message = "{NotNull.user.lastName}")
+    @Size(min=2, max=45, message = "{Size.user.lastName}")
     private String lastName;
 
-    @NotNull
+    @NotNull(message = "{NotNull.user.birthDate}")
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date birthDate;
 
-    @NotNull
-    @Size(min=2, max=100)
+    @NotNull(message = "{NotNull.user.passport}")
+    @Size(min=2, max=100, message = "{Size.user.passport}")
     private String passport;
 
-    @NotNull
-    @Size(min=2, max=100)
+    @NotNull(message = "{NotNull.user.address}")
+    @Size(min=2, max=100, message = "{Size.user.address}")
     private String address;
 
-    @NotNull
-    @Size(min=2, max=100)
+    @NotNull(message = "{NotNull.user.email}")
+    @Size(min=3, max=100, message = "{Size.user.email}")
     @Email
     private String email;
 
-    @NotNull
-    @Size(min=3, max=20)
+    @NotNull(message = "{NotNull.user.password}")
+//    @Size(min=3, max=20)
     private String password;
+
+    private Double balance;
 
     @JsonIgnore
     private Role.RoleName roleRoleName;

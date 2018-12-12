@@ -43,6 +43,9 @@ public class User extends AbstractModel {
     @Column(name = "PASSWORD")
     private String password;
 
+    @Column(name = "BALANCE")
+    private Double balance;
+
     @OneToMany(mappedBy = "user")
     private Set<Contract> contracts = new HashSet<>();
 

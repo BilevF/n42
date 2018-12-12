@@ -2,7 +2,6 @@
 
 function onSuccess(data) {
     clearErrors();
-    alert(data);
     window.location.href = "tariff?tariffId=" + data;
 }
 

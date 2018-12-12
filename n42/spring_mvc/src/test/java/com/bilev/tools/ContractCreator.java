@@ -9,9 +9,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ContractCreator implements Creator<ContractDto, BasicContractDto, Contract> {
 
-    private final String phoneNumber = "911";
+    private final String phoneNumber = "(911)435-45-55";
 
-    private final Double balance = 0.0;
 
     private final Integer userId = 0;
 
@@ -21,7 +20,6 @@ public class ContractCreator implements Creator<ContractDto, BasicContractDto, C
 
         contract.setId(id);
         contract.setPhoneNumber(id + phoneNumber);
-        contract.setBalance(balance);
         contract.setUserId(userId);
 
         return contract;
@@ -33,7 +31,6 @@ public class ContractCreator implements Creator<ContractDto, BasicContractDto, C
 
         contract.setId(id);
         contract.setPhoneNumber(id + phoneNumber);
-        contract.setBalance(balance);
         contract.setUserId(userId);
 
         return contract;
@@ -45,7 +42,6 @@ public class ContractCreator implements Creator<ContractDto, BasicContractDto, C
 
         contract.setId(id);
         contract.setPhoneNumber(id + phoneNumber);
-        contract.setBalance(balance);
 
         return contract;
     }

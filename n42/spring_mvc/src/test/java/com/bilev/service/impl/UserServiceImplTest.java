@@ -271,11 +271,11 @@ public class UserServiceImplTest implements ServiceErrors {
     public void testGetAllClients() throws UnableToFindException, OperationFailed {
         // prepare
         reset();
-        List<BasicUserDto> test = userCreator.getBasicDtoList();
+        List<UserDto> test = userCreator.getDtoList();
         when(userDao.getAllClients()).thenReturn(userCreator.getEntityList());
 
         // do
-        List<BasicUserDto> res = userService.getAllClients();
+        List<UserDto> res = userService.getAllClients();
 
         // verify
         Assert.assertTrue(res.containsAll(test) && test.containsAll(res));

@@ -4,6 +4,7 @@ import com.bilev.exception.service.OperationFailed;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -26,6 +27,14 @@ public class ControllerExceptionHandler {
     public String exceptionHandler(final Exception e) {
 
         return "Something bad happened";
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    @ExceptionHandler(AccessDeniedException.class)
+    public String exceptionHandler(final AccessDeniedException e) {
+
+        return "Access is denied";
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

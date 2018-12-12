@@ -1,10 +1,12 @@
 package com.bilev.controller.jsp;
 
 import com.bilev.dto.BasicUserDto;
+import com.bilev.dto.ContractDto;
 import com.bilev.dto.UserDto;
 import com.bilev.exception.service.OperationFailed;
 import com.bilev.service.api.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.security.Principal;
 import java.util.List;
 
 
@@ -50,9 +53,18 @@ public class UserController {
 
     @GetMapping(value = "/new")
     public ModelAndView newUserPage() {
-        return new ModelAndView("editUser", "user", new BasicUserDto());
+        return new ModelAndView("createUser", "user", new BasicUserDto());
     }
 
+    @GetMapping(value = "/update")
+    @PreAuthorize("@securityService.hasAccessToUser(#userId)")
+    public ModelAndView updateUserPage(@RequestParam("userId") Integer userId, Principal principal)
+            throws OperationFailed {
+
+        BasicUserDto user = userService.getUserById(userId);
+
+        return new ModelAndView("updateUser", "user", user);
+    }
 
     @GetMapping
     public String userPage(@RequestParam("userId") Integer userId, ModelMap model) throws OperationFailed {
@@ -66,9 +78,21 @@ public class UserController {
 
     @GetMapping(value = "/list")
     public String userListPage(ModelMap model) throws OperationFailed {
-        List<BasicUserDto> users = userService.getAllClients();
+        List<UserDto> users = userService.getAllClients();
         model.addAttribute("users", users);
         return "users";
+    }
+
+    @GetMapping(value = "/money")
+    @PreAuthorize("@securityService.hasAccessToUser(#userId)")
+    public String moneyPage(@RequestParam("userId") Integer userId, ModelMap model)
+            throws OperationFailed {
+
+        UserDto user = userService.getClientById(userId);
+
+        model.addAttribute("user", user);
+
+        return "addMoney";
     }
 
 

@@ -24,9 +24,13 @@ public interface ContractService {
 
     Collection<HistoryDto> getContractHistory(int contractId) throws OperationFailed;
 
+    int contractCountWithTariff(int tariffId) throws OperationFailed;
+
     // Edit
 
     int saveContract(BasicContractDto contractDto) throws OperationFailed;
+
+    void updateContract(BasicContractDto contractDto) throws OperationFailed;
 
     void changeContractTariff(int contractId, int replacementTariffId) throws OperationFailed;
 
@@ -44,5 +48,4 @@ public interface ContractService {
 
     void clearBasket(int contractId) throws OperationFailed;
 
-    void addMoney(int contractId, double amount) throws OperationFailed;
 }

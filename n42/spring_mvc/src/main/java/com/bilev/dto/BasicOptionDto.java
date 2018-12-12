@@ -14,20 +14,20 @@ import java.util.*;
 @EqualsAndHashCode(callSuper = true, of = {})
 public class BasicOptionDto extends AbstractDto {
 
-    @NotNull
-    @Size(min=2, max=45)
+    @NotNull(message = "{NotNull.option.name}")
+    @Size(min=2, max=45, message = "{Size.option.name}")
     private String name;
 
-    @NotNull
+    @NotNull(message = "{NotNull.option.price}")
     @Min(value=0)
     private Double price;
 
-    @NotNull
+    @NotNull(message = "{NotNull.option.connectionPrice}")
     @Min(value=0)
     private Double connectionPrice;
 
-    @NotNull
-    @Size(min=2, max=255)
+    @NotNull(message = "{NotNull.option.info}")
+    @Size(min=2, max=255, message = "{Size.option.info}")
     private String info;
 
     @NotNull

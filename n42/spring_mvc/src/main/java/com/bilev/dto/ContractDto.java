@@ -16,8 +16,6 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true, of = {})
 public class ContractDto extends BasicContractDto {
 
-    private Set<BasicOptionDto> options = new HashSet<>();
-
     private Set<BasicOptionDto> basket = new HashSet<>();
 
     private Set<HistoryDto> histories = new HashSet<>();

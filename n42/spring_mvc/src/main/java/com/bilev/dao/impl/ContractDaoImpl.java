@@ -21,7 +21,7 @@ public class ContractDaoImpl extends AbstractDaoImpl<Integer, Contract> implemen
         try {
             Criteria criteria = createEntityCriteria();
             criteria.createAlias("user", "user")
-                    .add(Restrictions.eq("user.Id", userId));
+                    .add(Restrictions.eq("user.id", userId));
             return (List<Contract>) criteria.list();
         } catch (Exception ex) {
             throw new UnableToFindException(ex);
@@ -35,6 +35,19 @@ public class ContractDaoImpl extends AbstractDaoImpl<Integer, Contract> implemen
             criteria.add(Restrictions.eq("phoneNumber", phone));
 
             return (Contract) criteria.uniqueResult();
+        } catch (Exception ex) {
+            throw new UnableToFindException(ex);
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Contract> getContractsWithTariff(int tariffId) throws UnableToFindException {
+        try {
+            Criteria criteria = createEntityCriteria();
+            criteria.createAlias("tariff", "tariff")
+                    .add(Restrictions.eq("tariff.id", tariffId));
+            return (List<Contract>) criteria.list();
         } catch (Exception ex) {
             throw new UnableToFindException(ex);
         }

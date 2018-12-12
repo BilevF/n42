@@ -6,8 +6,10 @@ import lombok.Setter;
 
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true, of = {})
-public class BasicTariffDto extends AbstractDto {
+@EqualsAndHashCode(of = {"id"})
+public class BasicTariffDto {
+
+    private Integer id;
 
     private String name;
 

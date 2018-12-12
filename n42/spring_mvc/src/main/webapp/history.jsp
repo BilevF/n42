@@ -4,12 +4,16 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html>
 <head>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.semanticui.min.css">
     <jsp:include page="parts/header.jsp">
         <jsp:param name="title" value="Contract history"/>
     </jsp:include>
 </head>
 <body class="bg-light">
-    <jsp:include page="parts/navbar.jsp"/>
+    <jsp:include page="parts/navbar.jsp">
+        <jsp:param name="balance" value="${contract.userBalance}"/>
+    </jsp:include>
 
     <jsp:include page="parts/welcom.jsp">
         <jsp:param name="name" value="Contract history"/>
@@ -19,22 +23,7 @@
 
     <div class="container" style="max-width: 960px;">
 
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <sec:authorize access="hasRole('ROLE_ADMIN')">
-                    <li class="breadcrumb-item"><a href="/user?userId=${contract.userId}">Client</a></li>
-                </sec:authorize>
-                <sec:authorize access="hasRole('ROLE_CLIENT')">
-                    <li class="breadcrumb-item"><a href="/account">Account</a></li>
-                </sec:authorize>
-                <li>
-                    <a href="/contract?contractId=${contractId}">Contract</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">History</li>
-            </ol>
-        </nav>
-
-        <table class="table table-hover">
+        <table id="table_history" class="ui table" >
             <thead>
             <tr>
                 <th scope="col">Name</th>
@@ -43,10 +32,10 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach items="${history}" var="item">
+            <c:forEach items="${contract.histories}" var="item">
                 <tr>
                     <td>${item.name}</td>
-                    <td>${item.price}</td>
+                    <td>₽${item.price}</td>
                     <td>${item.date}</td>
                 </tr>
             </c:forEach>
@@ -56,5 +45,31 @@
     </div>
 
     <jsp:include page="parts/footer.jsp"/>
+
+
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/dataTables.semanticui.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.js"></script>
+
+    <%--<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.3.1.js"></script>--%>
+    <%--<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>--%>
+    <%--<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>--%>
+
+    <%--<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>--%>
+
+    <script type="text/javascript" charset="utf8">
+
+        $(document).ready(function() {
+            $('#table_history').DataTable( {
+                fnInitComplete: function(){
+                    $("#table_history_filter").css("font-size", 14);
+                }
+            } );
+        } );
+
+
+    </script>
+
 </body>
 </html>

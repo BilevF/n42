@@ -15,6 +15,7 @@ import org.springframework.format.support.FormattingConversionService;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
+import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -22,7 +23,6 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
-import javax.validation.Validator;
 
 import java.util.List;
 
@@ -47,8 +47,9 @@ public class AppConfig extends WebMvcConfigurerAdapter {
      */
     @Bean
     public MessageSource messageSource() {
-        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("message");
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasename("classpath:message");
+        messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }
 
@@ -58,8 +59,16 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public Validator localValidatorFactoryBean() {
-        return new LocalValidatorFactoryBean();
+    public LocalValidatorFactoryBean validator() {
+        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+        bean.setValidationMessageSource(messageSource());
+        return bean;
+    }
+
+    @Override
+    public Validator getValidator()
+    {
+        return validator();
     }
 
     @Override

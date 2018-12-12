@@ -5,7 +5,7 @@
 <div class="card mb-4 shadow-sm">
     <div class="card-body">
         <h4 class="card-subtitle">${param.title}</h4>
-        <h1 class="card-title pricing-card-title">$${param.price} <small class="text-muted">/ mo</small></h1>
+        <h1 class="card-title pricing-card-title">₽${param.price} <small class="text-muted">/ mo</small></h1>
         ${param.info}
         <c:if test="${param.showBtn}">
             <form action="${param.path}" method="${param.method}">

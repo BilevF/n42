@@ -8,8 +8,8 @@ import com.bilev.dto.HistoryDto;
 
 import com.bilev.exception.service.OperationFailed;
 
+import com.bilev.model.Contract;
 import com.bilev.service.api.ContractService;
-import com.bilev.service.api.SecurityService;
 import com.bilev.service.api.TariffService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.security.Principal;
 import java.util.Collection;
 
 @Controller
@@ -34,20 +35,18 @@ public class ContractController {
 
     private final TariffService tariffService;
 
-    private final SecurityService securityService;
 
     @Autowired
-    public ContractController(ContractService contractService, TariffService tariffService, SecurityService securityService) {
+    public ContractController(ContractService contractService, TariffService tariffService) {
         this.contractService = contractService;
         this.tariffService = tariffService;
-        this.securityService = securityService;
     }
 
     @ExceptionHandler(Exception.class)
     public ModelAndView exceptionHandler(final Exception e) {
 
         ModelAndView model = new ModelAndView("serverError");
-        model.addObject("message", "Something bad happened");
+        model.addObject("message", "We'll be back!");
 
         return model;
     }
@@ -61,18 +60,7 @@ public class ContractController {
         return model;
     }
 
-//    private boolean hasAccess(Principal principal, int contractId) throws OperationFailed {
-//
-//        UserDto user = userService.getUserByEmail(principal.getName());
-//        ContractDto contractDto = contractService.getContract(contractId);
-//        return  user.getRoleRoleName() == Role.RoleName.ROLE_ADMIN || user.getId().equals(contractDto.getUserId());
-//    }
-//
-//    private boolean hasAccess(Principal principal, ContractDto contractDto) throws OperationFailed {
-//
-//        UserDto user = userService.getUserByEmail(principal.getName());
-//        return  user.getRoleRoleName() == Role.RoleName.ROLE_ADMIN || user.getId().equals(contractDto.getUserId());
-//    }
+
 
 
 
@@ -84,13 +72,24 @@ public class ContractController {
         model.addAttribute("contract", contractDto);
         model.addAttribute("tariffs", tariffService.getAvailableTariffs());
 
-        return "editContract";
+        return "createContract";
+    }
+
+    @GetMapping(value = "/update")
+    @PreAuthorize("@securityService.hasAccessToContract(#contractId)")
+    public String updateContractPage(ModelMap model, @RequestParam("contractId") Integer contractId) throws OperationFailed {
+        BasicContractDto contract = contractService.getContract(contractId);
+
+        model.addAttribute("contract", contract);
+
+        return "updateContract";
     }
 
 
     @GetMapping
-    @PreAuthorize("@securityService.hasAccess(principal, #contractId)")
-    public String contractPage(@RequestParam("contractId") Integer contractId, ModelMap model) throws OperationFailed {
+    @PreAuthorize("@securityService.hasAccessToContract(#contractId)")
+    public String contractPage(@RequestParam("contractId") Integer contractId, ModelMap model)
+            throws OperationFailed {
 
         ContractDto contractDto = contractService.getContract(contractId);
 
@@ -101,8 +100,9 @@ public class ContractController {
 
 
     @GetMapping(value = "/basket")
-    @PreAuthorize("@securityService.hasAccess(principal, #contractId)")
-    public String addNewOptionPage(@RequestParam("contractId") Integer contractId, ModelMap model) throws OperationFailed {
+    @PreAuthorize("@securityService.hasAccessToContract(#contractId)")
+    public String addNewOptionPage(@RequestParam("contractId") Integer contractId, ModelMap model)
+            throws OperationFailed {
 
         ContractDto contractDto = contractService.getContract(contractId);
 
@@ -117,43 +117,28 @@ public class ContractController {
 
 
     @GetMapping(value = "/tariff/change")
-    @PreAuthorize("@securityService.hasAccess(principal, #contractId)")
-    public String changeTariffPage(@RequestParam("contractId") Integer contractId, ModelMap model) throws OperationFailed {
+    @PreAuthorize("@securityService.hasAccessToContract(#contractId)")
+    public String changeTariffPage(@RequestParam("contractId") Integer contractId, ModelMap model)
+            throws OperationFailed {
+        ContractDto contract = contractService.getContract(contractId);
 
         model.addAttribute("tariffs", tariffService.getAvailableTariffs(contractId));
-        model.addAttribute("title", "Select tariff");
-        model.addAttribute("path", "/changeTariff");
-        model.addAttribute("method", "post");
-        model.addAttribute("hiddenName", "contractId");
-        model.addAttribute("hiddenValue", contractId);
-        model.addAttribute("btnName", "Select");
-        model.addAttribute("showBtn", true);
+        model.addAttribute("contract", contract);
 
-        return "tariffs";
+        return "selectTariff";
     }
 
 
     @GetMapping(value = "/history")
-    @PreAuthorize("@securityService.hasAccess(principal, #contractId)")
-    public String historyPage(@RequestParam("contractId") Integer contractId, ModelMap model) throws OperationFailed {
-
-        Collection<HistoryDto> history = contractService.getContractHistory(contractId);
-
-        model.addAttribute("history", history);
-        model.addAttribute("contractId", contractId);
-
-        return "history";
-    }
-
-    @GetMapping(value = "/money")
-    @PreAuthorize("@securityService.hasAccess(principal, #contractId)")
-    public String moneyPage(@RequestParam("contractId") Integer contractId, ModelMap model) throws OperationFailed {
+    @PreAuthorize("@securityService.hasAccessToContract(#contractId)")
+    public String historyPage(@RequestParam("contractId") Integer contractId, ModelMap model)
+            throws OperationFailed {
 
         ContractDto contract = contractService.getContract(contractId);
 
         model.addAttribute("contract", contract);
 
-        return "addMoney";
+        return "history";
     }
 
 }

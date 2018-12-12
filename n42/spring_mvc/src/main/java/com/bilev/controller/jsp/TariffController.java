@@ -4,6 +4,7 @@ import com.bilev.dto.BasicOptionDto;
 import com.bilev.dto.BasicTariffDto;
 import com.bilev.dto.TariffDto;
 import com.bilev.exception.service.OperationFailed;
+import com.bilev.service.api.ContractService;
 import com.bilev.service.api.TariffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,9 @@ public class TariffController {
 
     @Autowired
     private TariffService tariffService;
+
+    @Autowired
+    private ContractService contractService;
 
     @ExceptionHandler(Exception.class)
     public ModelAndView exceptionHandler(final Exception e) {
@@ -45,7 +49,7 @@ public class TariffController {
 
     @GetMapping(value = "/new")
     public ModelAndView newTariffPage() {
-        return new ModelAndView("editTariff", "tariff", new BasicTariffDto());
+        return new ModelAndView("createTariff", "tariff", new BasicTariffDto());
     }
 
 
@@ -55,6 +59,8 @@ public class TariffController {
         TariffDto tariff = tariffService.getTariff(tariffId);
 
         model.addAttribute("tariff", tariff);
+
+        model.addAttribute("clientsCount", contractService.contractCountWithTariff(tariffId));
 
         return "tariff";
     }
@@ -94,7 +100,7 @@ public class TariffController {
         option.setTariffId(tariffId);
         option.setRelatedOptions(new ArrayList<>(tariffService.getTariffBasicOptions(tariffId)));
         model.addAttribute("option", option);
-        return "editOption";
+        return "createOption";
     }
 
 

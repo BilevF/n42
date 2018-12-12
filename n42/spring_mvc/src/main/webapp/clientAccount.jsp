@@ -9,28 +9,32 @@
     </jsp:include>
 </head>
 <body class="bg-light">
-    <jsp:include page="parts/navbar.jsp"/>
+
+    <jsp:include page="parts/navbar.jsp">
+        <jsp:param name="contentType" value="account"/>
+        <jsp:param name="userId" value="${client.id}"/>
+    </jsp:include>
 
     <jsp:include page="parts/welcom.jsp">
         <jsp:param name="name" value="Hello, ${client.firstName} ${client.lastName}!"/>
         <jsp:param name="message" value="<p>Welcome to the client's home page</p>"/>
-        <jsp:param name="secondName" value=""/>
+        <jsp:param name="secondName" value="Balance: ₽${client.balance}"/>
     </jsp:include>
 
-    <div class="container" style="max-width: 960px;">
+    <div class="container">
 
-        <c:if test="${not empty exception}">
-            <div class="alert alert-danger" role="alert">
-                ${exception}
-            </div>
-        </c:if>
+        <c:set var="title" value="Personal info"/>
+        <sec:authorize access="hasRole('ROLE_CLIENT')">
+            <c:set var="edit" value="<a href='user/update?userId=${client.id}' class='btn btn-link' role='button'><span class='glyphicon glyphicon-cog'></span></a>"/>
+            <c:set var="title" value="Personal info ${edit}"/>
+        </sec:authorize>
 
-        <jsp:include page="parts/separator.jsp">
-            <jsp:param name="name" value="Client info"/>
-        </jsp:include>
+        <br>
 
         <jsp:include page="parts/info.jsp">
-            <jsp:param name="imgPath" value="/resources/images/client2.png"/>
+            <jsp:param name="imgPath" value="images/admin.png"/>
+
+            <jsp:param name="title" value="${title}"/>
 
             <jsp:param name="name1" value="Email"/>
             <jsp:param name="name2" value="Birth date"/>
@@ -43,48 +47,32 @@
             <jsp:param name="value4" value="${client.address}"/>
             <jsp:param name="value4Style" value=""/>
 
-            <jsp:param name="showBtn1" value="${false}"/>
-            <jsp:param name="btn1Path" value="#"/>
-            <jsp:param name="btn1HiddenName" value="userId"/>
-            <jsp:param name="btn1HiddenValue" value="${client.id}"/>
-            <jsp:param name="btn1Name" value="Edit"/>
-            <jsp:param name="btn1Method" value="get"/>
-
-            <jsp:param name="showBtn3" value="${false}"/>
-            <jsp:param name="showBtn2" value="${false}"/>
-            <jsp:param name="showBtn4" value="${false}"/>
         </jsp:include>
 
         <br>
 
 
+        <c:if test="${client.contracts.size() > 0}">
         <jsp:include page="parts/separator.jsp">
             <jsp:param name="name" value="Contracts"/>
         </jsp:include>
+        </c:if>
 
-        <div class="card-columns mb-3 text-center">
-
-            <sec:authorize access="hasRole('ROLE_ADMIN')">
-                <jsp:include page="parts/basicCard.jsp">
-                    <jsp:param name="title" value="New contract"/>
-                    <jsp:param name="body" value=""/>
-                    <jsp:param name="path" value="/newContract"/>
-                    <jsp:param name="method" value="get"/>
-                    <jsp:param name="hiddenName1" value="userId"/>
-                    <jsp:param name="hiddenValue1" value="${client.id}"/>
-                    <jsp:param name="hiddenName2" value=""/>
-                    <jsp:param name="hiddenValue2" value=""/>
-                    <jsp:param name="btnName" value="Add"/>
-                </jsp:include>
-            </sec:authorize>
+        <div class="card-columns mb-3 text-center" >
 
             <c:forEach items="${client.contracts}" var="contract">
+
+                <c:set var="total" value="${0}"/>
+                <c:forEach items="${contract.options}" var="option">
+                    <c:set var="total" value="${total + option.price}" />
+                </c:forEach>
+
                 <jsp:include page="parts/priceCard.jsp">
                     <jsp:param name="title" value="${contract.phoneNumber}"/>
-                    <jsp:param name="price" value="${contract.tariff.price}"/>
-                    <jsp:param name="info" value="<p class='card-text'>Tariff: ${contract.tariff.name}</p>
-                                                  <p class='card-text'>Balance: ${contract.balance}</p>"/>
-                    <jsp:param name="path" value="/contract"/>
+                    <jsp:param name="price" value="${contract.tariff.price + total}"/>
+                    <jsp:param name="info" value="<p class='card-text' style='margin: 0px'>Tariff: ${contract.tariff.name}</p>
+                                                  <p class='card-text'>${contract.tariff.info}</p>"/>
+                    <jsp:param name="path" value="contract"/>
                     <jsp:param name="method" value="get"/>
                     <jsp:param name="showBtn" value="${true}"/>
                     <jsp:param name="hiddenName1" value="contractId"/>

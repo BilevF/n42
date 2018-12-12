@@ -18,13 +18,7 @@
         <jsp:param name="secondName" value=""/>
     </jsp:include>
 
-    <div class="container" style="max-width: 960px;">
-
-        <c:if test="${not empty exception}">
-            <div class="alert alert-danger" role="alert">
-                    ${exception}
-            </div>
-        </c:if>
+    <div class="container">
 
         <div class="card-columns mb-3 text-center">
 
@@ -44,6 +38,7 @@
                     <jsp:param name="btnStyle" value="btn-primary"/>
                 </jsp:include>
             </c:forEach>
+
             <c:if test="${tariffs.size() == 0}">
                 <p align="left">No tariffs available</p>
             </c:if>

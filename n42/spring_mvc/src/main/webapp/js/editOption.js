@@ -1,5 +1,5 @@
 function reloadPage(tariffId) {
-    $("#main").load("tariff/option/new?tariffId=" + tariffId + " #main");
+    $("#relatedOptionsList").load("tariff/option/new?tariffId=" + tariffId + " #relatedOptionsList");
 }
 
 

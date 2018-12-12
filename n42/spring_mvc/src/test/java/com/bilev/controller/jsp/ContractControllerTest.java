@@ -3,8 +3,10 @@ package com.bilev.controller.jsp;
 import com.bilev.configuration.AppConfig;
 import com.bilev.configuration.HibernateConfiguration;
 import com.bilev.dao.api.ContractDao;
+import com.bilev.dao.api.OptionDao;
 import com.bilev.dao.api.TariffDao;
 import com.bilev.dao.api.UserDao;
+import com.bilev.dto.BasicOptionDto;
 import com.bilev.dto.BasicTariffDto;
 import com.bilev.model.Contract;
 import com.bilev.model.User;
@@ -14,9 +16,14 @@ import org.junit.runner.RunWith;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.FilterChainProxy;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
@@ -26,6 +33,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+
+import javax.annotation.Resource;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.hasItem;
@@ -51,6 +60,9 @@ public class ContractControllerTest {
     private TariffDao tariffDao;
 
     @Autowired
+    private OptionDao optionDao;
+
+    @Autowired
     private ContractDao contractDao;
 
     @Autowired
@@ -59,9 +71,33 @@ public class ContractControllerTest {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Resource
+    private FilterChainProxy springSecurityFilterChain;
+
     @Autowired
     @Qualifier("userDetailsServiceImpl")
     private UserDetailsService userDetailsService;
+
+    public static class MockSecurityContext implements SecurityContext {
+
+        private static final long serialVersionUID = -1386535243513362694L;
+
+        private Authentication authentication;
+
+        public MockSecurityContext(Authentication authentication) {
+            this.authentication = authentication;
+        }
+
+        @Override
+        public Authentication getAuthentication() {
+            return this.authentication;
+        }
+
+        @Override
+        public void setAuthentication(Authentication authentication) {
+            this.authentication = authentication;
+        }
+    }
 
 
     private UsernamePasswordAuthenticationToken getPrincipal(String username) {
@@ -79,7 +115,10 @@ public class ContractControllerTest {
 
     @Before
     public void setup() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(this.wac)
+                .addFilters(this.springSecurityFilterChain)
+                .build();
 
     }
 
@@ -98,20 +137,57 @@ public class ContractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("tariffs", hasItem(tariff1)))
                 .andExpect(model().attribute("tariffs", hasItem(tariff2)))
-                .andExpect(view().name("editContract"));
+                .andExpect(view().name("createContract"));
     }
 
 
 
     @Test
     public void testContractPage() throws Exception {
+
+
+        UsernamePasswordAuthenticationToken principal =
+                this.getPrincipal("admin");
+
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute(
+                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                new MockSecurityContext(principal));
+
         Contract contract = contractDao.getByKey(1);
 
-        mockMvc.perform(get("/contract").param("contractId", "1").principal(getPrincipal("admin")))
+        mockMvc.perform(get("/contract").param("contractId", "1").session(session))
                 .andExpect(status().isOk())
                 .andExpect(view().name("contract"))
-                .andExpect(model().attribute("contract", hasProperty("phoneNumber", is(contract.getPhoneNumber()))))
-                .andExpect(model().attribute("contract", hasProperty("balance", is(contract.getBalance()))))
-                .andExpect(view().name("contract"));
+                .andExpect(model().attribute("contract", hasProperty("phoneNumber", is(contract.getPhoneNumber()))));
     }
+
+
+    @Test
+    public void testAddNewOptionPage() throws Exception {
+
+
+        UsernamePasswordAuthenticationToken principal =
+                this.getPrincipal("admin");
+
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute(
+                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                new MockSecurityContext(principal));
+
+        Contract contract = contractDao.getByKey(2);
+
+        BasicOptionDto option1 = modelMapper.map(
+                optionDao.getByKey(1),
+                BasicOptionDto.class);
+
+        mockMvc.perform(get("/contract/basket").param("contractId", "2").session(session))
+                .andExpect(status().isOk())
+                .andExpect(view().name("optionsBasket"))
+                .andExpect(model().attribute("contract", hasProperty("phoneNumber", is(contract.getPhoneNumber()))))
+                .andExpect(model().attribute("availableOptions", hasItem(option1)));
+    }
+
+
+
 }

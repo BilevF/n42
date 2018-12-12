@@ -25,10 +25,12 @@
 
         <br>
 
+        <c:set var="edit" value="<a href='user/update?userId=${admin.id}' class='btn btn-link' role='button'><span class='glyphicon glyphicon-cog'></span></a>"/>
+
         <jsp:include page="parts/info.jsp">
             <jsp:param name="imgPath" value="images/admin.png"/>
 
-            <jsp:param name="title" value="Personal info"/>
+            <jsp:param name="title" value="Personal info ${edit}"/>
 
             <jsp:param name="name1" value="Email"/>
             <jsp:param name="name2" value="Birth date"/>
@@ -41,16 +43,6 @@
             <jsp:param name="value4" value="${admin.address}"/>
             <jsp:param name="value4Style" value=""/>
 
-            <jsp:param name="showBtn1" value="${false}"/>
-            <jsp:param name="btn1Path" value="#"/>
-            <jsp:param name="btn1HiddenName" value="userId"/>
-            <jsp:param name="btn1HiddenValue" value="${admin.id}"/>
-            <jsp:param name="btn1Name" value="Edit"/>
-            <jsp:param name="btn1Method" value="get"/>
-
-            <jsp:param name="showBtn3" value="${false}"/>
-            <jsp:param name="showBtn2" value="${false}"/>
-            <jsp:param name="showBtn4" value="${false}"/>
         </jsp:include>
 
 

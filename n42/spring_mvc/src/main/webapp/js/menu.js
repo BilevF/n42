@@ -1,41 +1,59 @@
 
 let createContent = $( "#createContent" );
-let showContent = $( "#showContent" );
-let findContent = $( "#findContent" );
+let showContent = $( "#showContent" );;
+let selectContent = $( "#selectContent" );
 
 let menuSeparator = $( "#menuSeparator" );
 
 let createBtn = $( "#menu-button-create" );
 let showBtn = $( "#menu-button-show" );
-let findBtn = $( "#menu-button-find" );
+let selectBtn = $( "#menu-button-select" );
+let blockBtn = $( "#menu-button-block" );
 
 let hiddenClassName = 'hidden';
 let activeBtnClassName = 'menu-button-active';
 let menuBtnClassName = 'menu-button';
 
-function closeAllContent() {
+function init() {
+    createContent = $( "#createContent" );
+    showContent = $( "#showContent" );
+    selectContent = $( "#selectContent" );
 
-    if (!createContent.hasClass (hiddenClassName)) {
+    menuSeparator = $( "#menuSeparator" );
+
+    createBtn = $( "#menu-button-create" );
+    showBtn = $( "#menu-button-show" );
+    selectBtn = $( "#menu-button-select" );
+    blockBtn = $( "#menu-button-block" );
+}
+
+function closeAllContent() {
+    init();
+
+    if (createContent != null && !createContent.hasClass (hiddenClassName)) {
         createContent.addClass(hiddenClassName);
     }
-    if (!showContent.hasClass (hiddenClassName)) {
+    if (showContent != null && !showContent.hasClass (hiddenClassName)) {
         showContent.addClass(hiddenClassName);
     }
-    if (!findContent.hasClass (hiddenClassName)) {
-        findContent.addClass(hiddenClassName);
+
+    if (selectContent != null && !selectContent.hasClass (hiddenClassName)) {
+        selectContent.addClass(hiddenClassName);
     }
 }
 
 function deactivateButtons() {
+    init();
 
-    if (createBtn.hasClass (activeBtnClassName)) {
+    if (createBtn != null && createBtn.hasClass (activeBtnClassName)) {
         createBtn.removeClass(activeBtnClassName);
     }
-    if (showBtn.hasClass (activeBtnClassName)) {
+    if (showBtn != null && showBtn.hasClass (activeBtnClassName)) {
         showBtn.removeClass(activeBtnClassName);
     }
-    if (findBtn.hasClass (activeBtnClassName)) {
-        findBtn.removeClass(activeBtnClassName);
+
+    if (selectBtn != null && selectBtn.hasClass (activeBtnClassName)) {
+        selectBtn.removeClass(activeBtnClassName);
     }
 }
 
@@ -57,20 +75,22 @@ function onCreate() {
     createBtn.addClass(activeBtnClassName);
 }
 
-function onFind() {
+
+
+function onSelect() {
     closeAllContent();
     deactivateButtons();
     menuSeparator.removeClass(hiddenClassName);
-    findContent.removeClass(hiddenClassName);
+    selectContent.removeClass(hiddenClassName);
 
-    findBtn.addClass(activeBtnClassName);
+    selectBtn.addClass(activeBtnClassName);
 }
 
 
 // When the user scrolls the page, execute myFunction
-window.onresize = function() {onload()};
+window.onresize = function() {onLoad()};
 window.onload = function() {
-    onload();
+    onLoad();
 
 
 };
@@ -79,13 +99,14 @@ window.onload = function() {
 let navbar = $('#navbar');
 let body = $('body');
 
-function onload() {
+function onLoad() {
     body.css("margin-top", navbar.height() + 10);
 }
 
 
 
 function onSpeach(word) {
+    word = getCommand(word);
     if (word == null || word == "") return;
 
     try {
@@ -103,25 +124,61 @@ function onSpeach(word) {
     }
 }
 
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList;
+const SpeechRecognitionEvent = window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent;
+
+const commands = {
+    найди: 'find',
+    найти: 'find',
+    покажи: 'show',
+    отобрази: 'show',
+    создай: 'create',
+    создать: 'create',
+    пользователь: 'user',
+    пользователя: 'user',
+    клиент: 'user',
+    клиента: 'user',
+    пользователи: 'users',
+    пользователей: 'users',
+    клиенты: 'users',
+    клиентов: 'users',
+    тариф: 'tariff',
+    тарифы: 'tariffs'
+
+};
+
+const commandList = Object.keys(commands);
+
+function getCommand(speechResult) {
+    if (speechResult in commands) {
+        return commands[speechResult];
+    }
+    return null;
+}
+
 try {
 
-    let grammar = '#JSGF V1.0; grammar colors; public <color> = find | show | create | user | users | tariff | tariffs;';
+    let grammar1 = '#JSGF V1.0; grammar colors; public <color> = find | show | create | user | users | tariff | tariffs;';
 
-    let speechRecognitionList = window.SpeechGrammarList || window.webkitSpeechGrammarList;
-    let speechRecognition = new speechRecognitionList();
+    const grammar = '#JSGF V1.0; grammar commands; public <command> = ' + commandList.join(' | ') + ' ;';
+
+    let speechRecognition = new SpeechGrammarList();
     speechRecognition.addFromString(grammar, 1);
 
-    let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     let recognition = new SpeechRecognition();
 
-
     recognition.grammars = speechRecognition;
+
+    // recognition.addFromString(grammar, 1);
 
     recognition.interimResults = true;
 
     recognition.continuous = true;
 
-    recognition.maxAlternatives = 3;
+    recognition.lang = 'ru-RU';
+
+    recognition.maxAlternatives = 1;
 
     recognition.start();
 

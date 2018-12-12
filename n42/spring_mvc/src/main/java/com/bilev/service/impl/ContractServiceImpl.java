@@ -171,6 +171,17 @@ public class ContractServiceImpl implements ContractService, ServiceErrors {
             throw new OperationFailed(UNABLE_TO_FIND);
         }
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public int contractCountWithTariff(int tariffId) throws OperationFailed {
+        try {
+            return contractDao.getContractsWithTariff(tariffId).size();
+
+        } catch (UnableToFindException e) {
+            throw new OperationFailed(UNABLE_TO_FIND);
+        }
+    }
 //
     // EDIT
 
@@ -195,8 +206,6 @@ public class ContractServiceImpl implements ContractService, ServiceErrors {
                     basicContractDto,
                     Contract.class);
 
-            contract.setBalance(0.0);
-
             contract.setBlock(block);
 
             contract.setTariff(tariff);
@@ -207,6 +216,28 @@ public class ContractServiceImpl implements ContractService, ServiceErrors {
 
         } catch (UnableToFindException | UnableToSaveException e) {
             throw new OperationFailed(UNABLE_TO_SAVE);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor=Exception.class)
+    public void updateContract(BasicContractDto basicContractDto) throws OperationFailed {
+        try {
+
+            if (!validator.validate(basicContractDto).isEmpty()) throw new OperationFailed(VALIDATION);
+
+            Contract hasContract = contractDao.getContractByPhone(basicContractDto.getPhoneNumber());
+            if (hasContract != null && hasContract.getId() != basicContractDto.getId())
+                throw new OperationFailed(PHONE_NOT_UNIQUE);
+
+            Contract contract = contractDao.getByKey(basicContractDto.getId());
+
+            contract.setPhoneNumber(basicContractDto.getPhoneNumber());
+
+            contractDao.update(contract);
+
+        } catch (UnableToFindException | UnableToUpdateException e) {
+            throw new OperationFailed(UNABLE_TO_UPDATE);
         }
     }
 
@@ -354,15 +385,15 @@ public class ContractServiceImpl implements ContractService, ServiceErrors {
             double sum = 0;
             for (Option option : contract.getBasket()) sum += option.getConnectionPrice();
 
-            if (sum > contract.getBalance()) throw new OperationFailed(NOT_ENOUGH_MONEY);
+            if (sum > contract.getUser().getBalance()) throw new OperationFailed(NOT_ENOUGH_MONEY);
 
-            contract.setBalance(contract.getBalance() - sum);
+            contract.getUser().setBalance(contract.getUser().getBalance() - sum);
             contract.getOptions().addAll(contract.getBasket());
 
             for (Option option : contract.getBasket()) {
                 History history = new History();
                 history.setDate(new Date());
-                history.setName(option.getName());
+                history.setName("Option: " + option.getName());
                 history.setPrice(option.getConnectionPrice());
                 history.setContract(contract);
                 historyDao.persist(history);
@@ -465,29 +496,5 @@ public class ContractServiceImpl implements ContractService, ServiceErrors {
         }
     }
 
-    @Override
-    @Transactional(rollbackFor=Exception.class)
-    public void addMoney(int contractId, double amount) throws OperationFailed {
-
-        try {
-            Contract contract = getNonBlockContract(contractId);
-
-            if (amount < 0) throw new OperationFailed(UNABLE_TO_UPDATE);
-
-            contract.setBalance(contract.getBalance() + amount);
-
-            contractDao.update(contract);
-
-            History history = new History();
-            history.setDate(new Date());
-            history.setName("Fill up balance");
-            history.setPrice(amount);
-            history.setContract(contract);
-            historyDao.persist(history);
-
-        } catch (UnableToUpdateException | UnableToSaveException | UnableToFindException e) {
-            throw new OperationFailed(UNABLE_TO_UPDATE);
-        }
-    }
 
 }

@@ -1,6 +1,7 @@
 package com.bilev.service.impl;
 
 import com.bilev.dao.api.ContractDao;
+import com.bilev.dao.api.HistoryDao;
 import com.bilev.dao.api.RoleDao;
 import com.bilev.dao.api.UserDao;
 import com.bilev.dto.BasicUserDto;
@@ -8,9 +9,11 @@ import com.bilev.dto.UserDto;
 import com.bilev.exception.dao.UnableToFindException;
 import com.bilev.exception.dao.UnableToSaveException;
 
+import com.bilev.exception.dao.UnableToUpdateException;
 import com.bilev.exception.service.OperationFailed;
 import com.bilev.exception.service.ServiceErrors;
 import com.bilev.model.Contract;
+import com.bilev.model.History;
 import com.bilev.model.Role;
 import com.bilev.model.User;
 import com.bilev.service.api.UserService;
@@ -25,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.Valid;
 import javax.validation.Validator;
 
+import java.util.Date;
 import java.util.List;
 
 @Service("userService")
@@ -38,19 +42,22 @@ public class UserServiceImpl implements UserService, ServiceErrors {
 
     private final ContractDao contractDao;
 
+    private final HistoryDao historyDao;
+
     private final ShaPasswordEncoder passwordEncoder;
 
     private final Validator validator;
 
     @Autowired
     public UserServiceImpl(UserDao userDao, RoleDao roleDao, ModelMapper modelMapper, ContractDao contractDao,
-                           ShaPasswordEncoder passwordEncoder, Validator validator) {
+                           ShaPasswordEncoder passwordEncoder, Validator validator, HistoryDao historyDao) {
         this.userDao = userDao;
         this.roleDao = roleDao;
         this.modelMapper = modelMapper;
         this.contractDao = contractDao;
         this.passwordEncoder = passwordEncoder;
         this.validator = validator;
+        this.historyDao = historyDao;
     }
 
     @Override
@@ -126,13 +133,13 @@ public class UserServiceImpl implements UserService, ServiceErrors {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BasicUserDto> getAllClients() throws OperationFailed {
+    public List<UserDto> getAllClients() throws OperationFailed {
         try {
             List<User> users = userDao.getAllClients();
 
             return modelMapper.map(
                     users,
-                    new TypeToken<List<BasicUserDto>>() {}.getType());
+                    new TypeToken<List<UserDto>>() {}.getType());
         } catch (UnableToFindException e) {
             throw new OperationFailed(UNABLE_TO_FIND);
         }
@@ -176,7 +183,9 @@ public class UserServiceImpl implements UserService, ServiceErrors {
 
             user.setRole(role);
 
-            user.setPassword(passwordEncoder.encodePassword(user.getPassword(), null));
+            user.setPassword("");
+
+            user.setBalance(0.0);
 
             userDao.persist(user);
 
@@ -186,5 +195,85 @@ public class UserServiceImpl implements UserService, ServiceErrors {
             throw new OperationFailed(UNABLE_TO_SAVE);
         }
     }
+
+    @Override
+    @Transactional(rollbackFor=Exception.class)
+    public void updateUser(BasicUserDto basicUserDto) throws OperationFailed {
+        try {
+
+            if (!validator.validate(basicUserDto).isEmpty() || basicUserDto.getId() == null)
+                throw new OperationFailed(VALIDATION);
+
+            User hasUser = userDao.findByEmail(basicUserDto.getEmail());
+            if (hasUser != null && hasUser.getId() != basicUserDto.getId())
+                throw new OperationFailed(EMAIL_NOT_UNIQUE);
+
+            User user = userDao.getByKey(basicUserDto.getId());
+            if (user == null) throw new OperationFailed(USER_NOT_FOUND);
+
+            user.setEmail(basicUserDto.getEmail());
+            user.setAddress(basicUserDto.getAddress());
+
+            if (!basicUserDto.getPassword().isEmpty())
+                user.setPassword(basicUserDto.getPassword());
+
+            userDao.update(user);
+
+        } catch (UnableToFindException | UnableToUpdateException e) {
+            throw new OperationFailed(UNABLE_TO_UPDATE);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor=Exception.class)
+    public void updateUserPassword(int userId, String password) throws OperationFailed {
+        try {
+
+            if (password == null || password.isEmpty()) throw new OperationFailed(UNABLE_TO_UPDATE);
+
+            User user = userDao.getByKey(userId);
+            if (user == null) throw new OperationFailed(USER_NOT_FOUND);
+
+            user.setPassword(password);
+
+            userDao.update(user);
+
+        } catch (UnableToFindException | UnableToUpdateException e) {
+            throw new OperationFailed(UNABLE_TO_UPDATE);
+        }
+    }
+
+
+
+
+    @Override
+    @Transactional(rollbackFor=Exception.class)
+    public void addMoney(int userId, double amount) throws OperationFailed {
+
+        try {
+            User user = userDao.getByKey(userId);
+
+            if (amount < 0) throw new OperationFailed(UNABLE_TO_UPDATE);
+
+            user.setBalance(user.getBalance() + amount);
+
+            userDao.update(user);
+
+            Date date = new Date();
+            for (Contract  contract : user.getContracts()) {
+                History history = new History();
+                history.setDate(date);
+                history.setName("Top up balance");
+                history.setPrice(amount);
+                history.setContract(contract);
+                historyDao.persist(history);
+            }
+
+        } catch (UnableToUpdateException | UnableToSaveException | UnableToFindException e) {
+            throw new OperationFailed(UNABLE_TO_UPDATE);
+        }
+    }
+
+
 
 }

@@ -59,7 +59,7 @@
         </div>
 
         <c:if test = "${option.relatedOptions.size() != 0}">
-            <table class="table table-hover">
+            <table id="relatedOptionsList" class="table table-hover">
                 <thead>
                 <tr>
                     <th scope="col">Name</th>

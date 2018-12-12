@@ -20,9 +20,6 @@ public class Contract extends AbstractModel {
     @Column(name = "PHONE_NUMBER")
     private String phoneNumber;
 
-    @Column(name = "BALANCE")
-    private Double balance;
-
     @ManyToOne
     @JoinColumn(name = "BLOCK_ID")
     private Block block;

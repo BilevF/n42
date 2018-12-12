@@ -10,37 +10,22 @@
 </head>
 <body class="bg-light">
 
-    <jsp:include page="parts/navbar.jsp"/>
+    <jsp:include page="parts/navbar.jsp">
+        <jsp:param name="balance" value="${contract.userBalance}"/>
+    </jsp:include>
 
     <jsp:include page="parts/welcom.jsp">
         <jsp:param name="name" value="Phone number: ${contract.phoneNumber}"/>
-        <jsp:param name="secondName" value="Balance: $${contract.balance}"/>
+        <jsp:param name="secondName" value="Balance: ₽${contract.userBalance}"/>
         <jsp:param name="message" value="<p>Welcome to the home page of available options</p>"/>
 
     </jsp:include>
 
-    <div class="container" style="max-width: 960px;">
+    <div class="container">
 
-        <c:if test="${not empty exception}">
-            <div class="alert alert-danger" role="alert">
-                    ${exception}
-            </div>
-        </c:if>
+        <div id="exception"></div>
 
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <sec:authorize access="hasRole('ROLE_ADMIN')">
-                    <li class="breadcrumb-item"><a href="/user?userId=${contract.userId}">Client</a></li>
-                </sec:authorize>
-                <sec:authorize access="hasRole('ROLE_CLIENT')">
-                    <li class="breadcrumb-item"><a href="/account">Account</a></li>
-                </sec:authorize>
-                <li>
-                    <a href="/contract?contractId=${contract.id}">Contract</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">Cart</li>
-            </ol>
-        </nav>
+        <div id="main">
 
         <c:if test="${contract.blockType == 'NON'}">
 
@@ -52,21 +37,16 @@
 
                     <div class="card-columns mb-3 text-center">
                         <c:forEach items="${availableOptions}" var="option">
-                            <jsp:include page="parts/priceCard.jsp">
-                                <jsp:param name="title" value="${option.name}"/>
-                                <jsp:param name="price" value="${option.price}"/>
-                                <jsp:param name="info" value="<p class='card-text'>${option.info}</p>
-                                    <p class='card-text'>Connection price: ${option.connectionPrice}</p>"/>
-                                <jsp:param name="path" value="/addToBasket"/>
-                                <jsp:param name="method" value="post"/>
-                                <jsp:param name="showBtn" value="${true}"/>
-                                <jsp:param name="hiddenName1" value="contractId"/>
-                                <jsp:param name="hiddenValue1" value="${contract.id}"/>
-                                <jsp:param name="hiddenName2" value="optionId"/>
-                                <jsp:param name="hiddenValue2" value="${option.id}"/>
-                                <jsp:param name="btnName" value="Add"/>
-                                <jsp:param name="btnStyle" value="btn-primary"/>
-                            </jsp:include>
+
+                            <div class="card mb-4 shadow-sm">
+                                <div class="card-body">
+                                    <h4 class="card-subtitle">${option.name}</h4>
+                                    <h1 class="card-title pricing-card-title">₽${option.price} <small class="text-muted">/ mo</small></h1>
+                                    <p class='card-text'>${option.info}</p>
+                                    <p class='card-text'>Connection price: ₽${option.connectionPrice}</p>
+                                    <button onclick="addToBasket(${contract.id}, ${option.id})" class="btn btn-primary">Add</button>
+                                </div>
+                            </div>
                         </c:forEach>
 
                         <c:if test="${availableOptions.size() == 0}">
@@ -87,6 +67,7 @@
 
                     <c:choose>
                     <c:when test = "${contract.basket != null && contract.basket.size() > 0}">
+                        <c:set var="total" value="${0}"/>
                         <ul class="list-group mb-3">
                             <c:forEach items="${contract.basket}" var="option">
                                 <li class="list-group-item d-flex justify-content-between lh-condensed">
@@ -94,33 +75,24 @@
                                         <h4 class="my-0">${option.name}</h4>
                                         <small class="text-muted">${option.info}</small>
                                     </div>
-                                    <span class="text-muted">$${option.connectionPrice}
+                                    <span class="text-muted">₽${option.connectionPrice}
                                         <small class="text-muted">
-                                            <form action="/removeFromBasket" method="post" style="margin-bottom: 0em">
-                                                <input name="contractId" type="hidden" value="${contract.id}">
-                                                <input name="optionId" type="hidden" value="${option.id}">
-                                                <button type="submit" class="btn btn-link btn-xs">Remove</button>
-                                            </form>
+                                            <button onclick="removeFromBasket(${contract.id}, ${option.id})" class="btn btn-link btn-xs">Remove</button>
                                         </small>
                                     </span>
+                                    <c:set var="total" value="${total + option.connectionPrice}" />
                                 </li>
                             </c:forEach>
 
-                                <%--<li class="list-group-item d-flex justify-content-between">--%>
-                                <%--<span>Total (USD)</span>--%>
-                                <%--<strong>$20</strong>--%>
-                                <%--</li>--%>
+                            <li class="list-group-item d-flex justify-content-between">
+                            <span>Total (RUB)</span>
+                            <strong>₽${total}</strong>
+                            </li>
                         </ul>
 
                         <div class="btn-group" role="group" aria-label="basket btn">
-                            <form action="/submitBasket" method="post" style="display: inline;">
-                                <input name="contractId" type="hidden" value="${contract.id}">
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                            </form>
-                            <form action="/clearBasket" method="post" style="display: inline;">
-                                <input name="contractId" type="hidden" value="${contract.id}">
-                                <button type="submit" class="btn btn btn-danger">Clear</button>
-                            </form>
+                            <button onclick="submitBasket(${contract.id})" class="btn btn-primary">Submit</button>
+                            <button onclick="clearBasket(${contract.id})" class="btn btn btn-secondary">Clear</button>
                         </div>
                     </c:when>
                     <c:otherwise>
@@ -133,8 +105,12 @@
             </div>
         </c:if>
 
+        </div>
+
     </div>
     <jsp:include page="parts/footer.jsp"/>
+
+    <script src="js/basket.js" type="text/javascript"></script>
 
 </body>
 </html>

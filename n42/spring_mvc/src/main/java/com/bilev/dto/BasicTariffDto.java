@@ -13,18 +13,18 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(callSuper = true, of = {})
 public class BasicTariffDto extends AbstractDto {
 
-    @NotNull
-    @Size(min=2, max=45)
+    @NotNull(message = "{NotNull.tariff.name}")
+    @Size(min=2, max=45, message = "{Size.tariff.name}")
     private String name;
 
-    @NotNull
+    @NotNull(message = "{NotNull.tariff.price}")
     @Min(value=0)
     private Double price;
 
-    @NotNull
-    @Size(min=2, max=255)
+    @NotNull(message = "{NotNull.tariff.info}")
+    @Size(min=2, max=255, message = "{Size.tariff.info}")
     private String info;
 
-    @NotNull
+    @NotNull(message = "{NotNull.tariff.valid}")
     private Boolean valid;
 }

@@ -79,7 +79,7 @@ public class TariffControllerTest {
 
         mockMvc.perform(get("/tariff/new").principal(getPrincipal("admin")))
                 .andExpect(status().isOk())
-                .andExpect(view().name("editTariff"));
+                .andExpect(view().name("createTariff"));
     }
 
     @Test
@@ -153,7 +153,7 @@ public class TariffControllerTest {
         mockMvc.perform(get("/tariff/option/new").param("tariffId", "1").principal(getPrincipal("admin")))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("option", hasProperty("tariffId", is(1))))
-                .andExpect(view().name("editOption"));
+                .andExpect(view().name("createOption"));
     }
 
     @Test

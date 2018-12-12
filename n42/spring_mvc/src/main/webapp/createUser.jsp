@@ -70,13 +70,15 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" name="password" autocomplete="false" class="form-control" id="password" placeholder=""/>
-            <div class="invalid-feedback">
-                <span id="password_error"></span>
-            </div>
-        </div>
+        <%--<div class="form-group">--%>
+            <%--<label for="password">Password</label>--%>
+            <%--<input type="password" name="password" autocomplete="false" class="form-control" id="password" placeholder=""/>--%>
+            <%--<div class="invalid-feedback">--%>
+                <%--<span id="password_error"></span>--%>
+            <%--</div>--%>
+        <%--</div>--%>
+
+        <input type="hidden" name="password" autocomplete="false" class="form-control" id="password" placeholder=""/>
 
         <button onclick="editUser()" class="btn btn-primary">Save</button>
     </div>

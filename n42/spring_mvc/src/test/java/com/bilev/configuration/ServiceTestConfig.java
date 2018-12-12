@@ -3,6 +3,8 @@ package com.bilev.configuration;
 import com.bilev.dao.api.*;
 import com.bilev.dao.impl.UserDaoImpl;
 import com.bilev.model.Tariff;
+import com.bilev.service.api.MailService;
+import com.bilev.service.api.MessageService;
 import com.bilev.service.api.UserService;
 import com.bilev.service.impl.UserServiceImpl;
 import org.mockito.Mock;
@@ -80,6 +82,16 @@ public class ServiceTestConfig {
     @Bean
     public HistoryDao historyDaoService() {
         return Mockito.mock(HistoryDao.class);
+    }
+
+    @Bean
+    public MailService mailService() {
+        return Mockito.mock(MailService.class);
+    }
+
+    @Bean
+    public MessageService messageService() {
+        return Mockito.mock(MessageService.class);
     }
 
 }

@@ -12,6 +12,8 @@ public interface ContractDao extends AbstractDao<Integer, Contract> {
 
     Contract getContractByPhone(String phone) throws UnableToFindException;
 
+    List<Contract> getContractsWithTariff(int tariffId) throws UnableToFindException;
+
     void updateAll(Collection<Contract> contracts) throws UnableToUpdateException;
 
     List<Contract> getAllContractsWithOption(int optionId) throws UnableToFindException;

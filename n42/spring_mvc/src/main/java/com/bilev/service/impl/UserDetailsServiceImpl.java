@@ -3,6 +3,8 @@ package com.bilev.service.impl;
 import com.bilev.dao.api.UserDao;
 import com.bilev.exception.dao.UnableToFindException;
 import com.bilev.model.User;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -36,11 +38,27 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("Username not found");
         }
 
+        if (user.getPassword().isEmpty()) throw new UsernameNotFoundException("Username not found");
+
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole().getRoleName().name()));
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(), user.getPassword(), grantedAuthorities);
+        return new ExtendUser(user.getId(), user.getEmail(), user.getPassword(), grantedAuthorities);
+    }
+
+
+    @Setter
+    @Getter
+    public class ExtendUser extends org.springframework.security.core.userdetails.User {
+
+        private final Integer id;
+
+        public ExtendUser(Integer id, String username, String password, Set<GrantedAuthority> grantedAuthorities) {
+
+            super(username, password, grantedAuthorities);
+
+            this.id = id;
+        }
     }
 
 

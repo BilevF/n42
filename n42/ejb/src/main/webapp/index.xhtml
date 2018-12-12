@@ -8,56 +8,82 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition>
     <h:head>
-        <h1><h:outputText value="jsf-ejb example" /></h1>
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"></link>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" ></link>
+
+        <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet"></link>
+
+
+
+        <link href="css/common.css" type="text/css" rel="stylesheet"></link>
+        <link rel="icon" href="images/n42.png"></link>
     </h:head>
 
-    <h:body>
-        <h:form id="form">
+    <h:body styleClass="bg-light">
 
-            <h:dataTable value="#{HelloJSFBean.tariffs}" var="o" id="table">
+        <div id="navbar">
+            <div id="navitem" class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white shadow-sm">
+                <div class="my-0 mr-md-3 font-weight-normal">
+                    <div class="navbar-header ">
+                        <a class="navbar-brand" style="font-size: 30px; color: black"><b>N42</b></a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                <h:column>
-                    <!-- column header -->
-                    <f:facet name="header">Name</f:facet>
-                    <!-- row record -->
-                    #{o.name}
-                </h:column>
+        <div id="welcome" class="jumbotron bg-white">
+            <div class="container" style="max-width: 960px;">
+                <h2 class="card-title" style="text-align:left; font-size: 26px;">
+                    <b>Available tariffs</b>
+                    <span style="float:right;"></span>
+                </h2>
 
-                <h:column>
-                    <f:facet name="header">Price</f:facet>
-                    #{o.price}
-                </h:column>
+                <div>
+                    <small class="text-muted" style="font-size: 18px;"></small>
+                </div>
+            </div>
+        </div>
 
-                <h:column>
-                    <f:facet name="header">Info</f:facet>
-                    #{o.info}
-                </h:column>
+        <h:form>
 
-            </h:dataTable>
+        <div class="container">
 
-            <p:poll widgetVar="poll" interval="1" update="table" stop="#{HelloJSFBean.stop}"
-                    listener="#{HelloJSFBean.listener}" onstart="onStartPoll();"/>
+            <h:panelGroup id="tariffs">
+                <div class="card-columns mb-3 text-center">
+                    <ui:repeat value="#{homePageBean.tariffs}" var="tariff">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+                                <h4 class="card-subtitle">${tariff.name}</h4>
+                                <h1 class="card-title pricing-card-title">₽${tariff.price} <small class="text-muted">/ mo</small></h1>
+                                <p class='card-text'>Info: ${tariff.info}</p>
+                                <br/>
+                            </div>
+                        </div>
+                    </ui:repeat>
+                </div>
+            </h:panelGroup>
+        </div>
 
+        <p:remoteCommand name="updateTariffs" update="tariffs"/>
 
-            <h:outputText value="#{HelloJSFBean.hasData}" id="hasDataVal"/>
+        <f:websocket channel="tariffChannel" onmessage="socketListener" />
 
-            <p:poll interval="1" update="hasDataVal"/>
-
-
-            <script type="text/javascript">
-                function onStartPoll() {
-                    var timer = setInterval(function() {
-                        var hasData = document.getElementById("form:hasDataVal").innerText;
-                        // alert(hasData);
-                        if (hasData == "true") {
-                            PF("poll").start();
-                            clearInterval(timer);
-                        }
-                    }, 3000);
-                }
-            </script>
 
         </h:form>
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+
+        <script type="text/javascript">
+            function socketListener(message, channel, event) {
+                //$("#tariffs").load("http://localhost:8080/advertising #tariffs");
+                updateTariffs();
+            }
+        </script>
     </h:body>
 </ui:composition>
 </html>

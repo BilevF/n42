@@ -16,10 +16,16 @@ public interface UserService {
 
     UserDto getClientById(int userId) throws OperationFailed;
 
-    List<BasicUserDto> getAllClients() throws OperationFailed;
+    List<UserDto> getAllClients() throws OperationFailed;
 
     UserDto getUserByPhone(String phone) throws OperationFailed;
 
     int saveUser(BasicUserDto basicUserDto) throws OperationFailed;
+
+    void updateUser(BasicUserDto basicUserDto) throws OperationFailed;
+
+    void addMoney(int userId, double amount) throws OperationFailed;
+
+    void updateUserPassword(int userId, String password) throws OperationFailed;
 
 }

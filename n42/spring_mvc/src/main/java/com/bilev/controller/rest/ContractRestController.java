@@ -9,9 +9,11 @@ import com.bilev.exception.service.OperationFailed;
 import com.bilev.service.api.ContractService;
 import com.bilev.service.api.SecurityService;
 import com.bilev.service.api.UserService;
+import com.bilev.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import javax.validation.Valid;
-import java.security.Principal;
 
 
 @RestController
@@ -32,15 +33,9 @@ public class ContractRestController {
 
     private final ContractService contractService;
 
-    private final UserService userService;
-
-    private final SecurityService securityService;
-
     @Autowired
-    public ContractRestController(ContractService contractService, UserService userService, SecurityService securityService) {
+    public ContractRestController(ContractService contractService) {
         this.contractService = contractService;
-        this.userService = userService;
-        this.securityService = securityService;
     }
 
     @PostMapping
@@ -49,9 +44,16 @@ public class ContractRestController {
         return contractService.saveContract(contract);
     }
 
+    @PatchMapping
+    @PreAuthorize("@securityService.hasAccessToContract(#contract)")
+    public void updateContract(@RequestBody @Valid BasicContractDto contract) throws OperationFailed {
+
+        contractService.updateContract(contract);
+    }
+
 
     @DeleteMapping(value = "/option")
-    @PreAuthorize("@securityService.hasAccess(principal, #contractId)")
+    @PreAuthorize("@securityService.hasAccessToContract(#contractId)")
     public void removeOption(@RequestParam("contractId") Integer contractId,
                              @RequestParam("optionId") Integer optionId) throws OperationFailed {
 
@@ -60,7 +62,7 @@ public class ContractRestController {
 
 
     @PutMapping(value = "/basket/option")
-    @PreAuthorize("@securityService.hasAccess(principal, #contractId)")
+    @PreAuthorize("@securityService.hasAccessToContract(#contractId)")
     public void addToBasket(@RequestParam("contractId") Integer contractId,
                             @RequestParam("optionId") Integer optionId) throws OperationFailed {
 
@@ -69,7 +71,7 @@ public class ContractRestController {
 
 
     @DeleteMapping(value = "/basket/option")
-    @PreAuthorize("@securityService.hasAccess(principal, #contractId)")
+    @PreAuthorize("@securityService.hasAccessToContract(#contractId)")
     public void removeFromBasket(@RequestParam("contractId") Integer contractId,
                                  @RequestParam("optionId") Integer optionId) throws OperationFailed {
 
@@ -78,15 +80,15 @@ public class ContractRestController {
 
 
     @DeleteMapping(value = "/basket")
-    @PreAuthorize("@securityService.hasAccess(principal, #contractId)")
+    @PreAuthorize("@securityService.hasAccessToContract(#contractId)")
     public void clearBasket(@RequestParam("contractId") Integer contractId) throws OperationFailed {
 
         contractService.clearBasket(contractId);
     }
 
 
-    @PatchMapping(value = "/basket/submit")
-    @PreAuthorize("@securityService.hasAccess(principal, #contractId)")
+    @PostMapping(value = "/basket")
+    @PreAuthorize("@securityService.hasAccessToContract(#contractId)")
     public void submitBasket(@RequestParam("contractId") Integer contractId) throws OperationFailed {
 
         contractService.submitBasket(contractId);
@@ -94,7 +96,7 @@ public class ContractRestController {
 
 
     @PatchMapping(value = "/tariff")
-    @PreAuthorize("@securityService.hasAccess(principal, #contractId)")
+    @PreAuthorize("@securityService.hasAccessToContract(#contractId)")
     public void changeTariffAction(@RequestParam("contractId") Integer contractId,
                                    @RequestParam("tariffId") Integer tariffId) throws OperationFailed {
 
@@ -103,29 +105,21 @@ public class ContractRestController {
 
 
     @PatchMapping(value = "/block")
-    @PreAuthorize("@securityService.hasAccess(principal, #contractId)")
-    public void blockContract(@RequestParam("contractId") Integer contractId, Principal principal)
-            throws OperationFailed {
+    @PreAuthorize("@securityService.hasAccessToContract(#contractId)")
+    public void blockContract(@RequestParam("contractId") Integer contractId,
+                              Authentication auth) throws OperationFailed {
 
-        UserDto user = userService.getUserByEmail(principal.getName());
+        UserDetailsServiceImpl.ExtendUser user = (UserDetailsServiceImpl.ExtendUser)auth.getPrincipal();
         contractService.blockContract(user.getId(), contractId);
     }
 
     @PatchMapping(value = "/unblock")
-    @PreAuthorize("@securityService.hasAccess(principal, #contractId)")
-    public void unblockContract(@RequestParam("contractId") Integer contractId, Principal principal)
-            throws OperationFailed {
+    @PreAuthorize("@securityService.hasAccessToContract(#contractId)")
+    public void unblockContract(@RequestParam("contractId") Integer contractId,
+                                Authentication auth) throws OperationFailed {
 
-        UserDto user = userService.getUserByEmail(principal.getName());
+        UserDetailsServiceImpl.ExtendUser user = (UserDetailsServiceImpl.ExtendUser)auth.getPrincipal();
         contractService.unblockContract(user.getId(), contractId);
-    }
-
-    @PatchMapping(value = "/money")
-    @PreAuthorize("@securityService.hasAccess(principal, #contractId)")
-    public void addMoney(@RequestParam("contractId") Integer contractId,
-                                 @RequestParam("moneyValue") Double moneyValue) throws OperationFailed {
-
-        contractService.addMoney(contractId, moneyValue);
     }
 
 }

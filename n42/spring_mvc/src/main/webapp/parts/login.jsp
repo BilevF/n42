@@ -7,8 +7,10 @@
     <div class="col-lg-12">
         <form id="ajax-login-form" action="account" method="post">
 
+            <br>
+
             <div class="form-group">
-                <label for="username">Email/Phone</label>
+                <label for="username">Email</label>
                 <input type="text" name="username" id="username" class="form-control" placeholder="Username" value="">
             </div>
 
@@ -25,15 +27,16 @@
                 </div>
             </div>
 
-            <%--<div class="form-group">--%>
-                <%--<div class="row">--%>
-                    <%--<div class="col-lg-12">--%>
-                        <%--<div class="text-center">--%>
-                            <%--<a href="#" class="forgot-password">Forgot Password?</a>--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
-                <%--</div>--%>
-            <%--</div>--%>
         </form>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="text-center">
+                        <a href="forgotPassword" class="btn btn-link">Forgot Password?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </ul>
