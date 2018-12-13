@@ -249,7 +249,7 @@
                     <version>${wildfly-maven-plugin.version}</version>
                     <configuration>
                         <hostname>localhost</hostname>
-                        <port>9990</port>
+                        <port>10091</port>
                         <filename>WarApp1.war</filename>
                         <server-args>
                             <server-arg>-Djboss.http.port=8181</server-arg>
