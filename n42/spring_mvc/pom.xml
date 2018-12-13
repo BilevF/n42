@@ -250,6 +250,8 @@
                     <configuration>
                         <hostname>localhost</hostname>
                         <port>10091</port>
+                        <password>test</password>
+                        <username>test</username>
                         <filename>WarApp1.war</filename>
                         <server-args>
                             <server-arg>-Djboss.http.port=8181</server-arg>
