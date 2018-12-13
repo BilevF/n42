@@ -1,8 +1,8 @@
-package com.bilev.ejb;
+package com.ee.bilev.service;
 
-import com.bilev.dto.BasicTariffDto;
-import com.bilev.qualifier.OnMessage;
-import com.bilev.qualifier.OnReload;
+import com.ee.bilev.dto.BasicTariffDto;
+import com.ee.bilev.qualifier.OnMessage;
+import com.ee.bilev.qualifier.OnReload;
 import lombok.Getter;
 
 import javax.annotation.PostConstruct;
@@ -38,7 +38,7 @@ public class TariffsEJB implements java.io.Serializable {
     @PostConstruct
     public void init () {
         try {
-            tariffs = client.target("http://localhost:8080/n42/rest/tariff/list").
+            tariffs = client.target("http://localhost:8181/n42/rest/tariff/list").
                     request(MediaType.APPLICATION_JSON_TYPE).
                     get(new GenericType<Set<BasicTariffDto>>() {
                     });
@@ -47,12 +47,12 @@ public class TariffsEJB implements java.io.Serializable {
 
     public void reLoad(@Observes @OnMessage Boolean message) {
         try {
-            tariffs = client.target("http://localhost:8080/n42/rest/tariff/list").
+            System.out.println("reLoad");
+            tariffs = client.target("http://localhost:8181/n42/rest/tariff/list").
                     request(MediaType.APPLICATION_JSON_TYPE).
                     get(new GenericType<Set<BasicTariffDto>>() {
                     });
             reload.fire(true);
-            System.out.println("reLoad!!!!!!!!!!!!!!!!");
 
         } catch (Exception ignored) { }
 

@@ -30,18 +30,15 @@ public class SecurityServiceImpl implements SecurityService, ServiceErrors {
 
     private final String mail_secret = "Wk9_To1s+w24DOTzd2-rV2rn";
 
-    private final ContractDao contractDao;
-
-    private final UserDao userDao;
-
-    private final ShaPasswordEncoder shaEncoder;
+    @Autowired
+    private ContractDao contractDao;
 
     @Autowired
-    public SecurityServiceImpl(ContractDao contractDao, UserDao userDao, ShaPasswordEncoder shaEncoder) {
-        this.contractDao = contractDao;
-        this.userDao = userDao;
-        this.shaEncoder = shaEncoder;
-    }
+    private UserDao userDao;
+
+    @Autowired
+    private ShaPasswordEncoder shaEncoder;
+
 
 
     @Override

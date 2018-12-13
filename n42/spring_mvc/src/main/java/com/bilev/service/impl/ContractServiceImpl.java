@@ -41,34 +41,29 @@ import java.util.List;
 @Service("contractService")
 public class ContractServiceImpl implements ContractService, ServiceErrors {
 
-    private final ContractDao contractDao;
-
-    private final TariffDao tariffDao;
-
-    private final OptionDao optionDao;
-
-    private final UserDao userDao;
-
-    private final BlockDao blockDao;
-
-    private final HistoryDao historyDao;
-
-    private final ModelMapper modelMapper;
-
-    private final Validator validator;
+    @Autowired
+    private ContractDao contractDao;
 
     @Autowired
-    public ContractServiceImpl(ContractDao contractDao, TariffDao tariffDao, OptionDao optionDao, UserDao userDao,
-                               BlockDao blockDao, HistoryDao historyDao, ModelMapper modelMapper, Validator validator) {
-        this.contractDao = contractDao;
-        this.tariffDao = tariffDao;
-        this.optionDao = optionDao;
-        this.userDao = userDao;
-        this.blockDao = blockDao;
-        this.historyDao = historyDao;
-        this.modelMapper = modelMapper;
-        this.validator = validator;
-    }
+    private TariffDao tariffDao;
+
+    @Autowired
+    private OptionDao optionDao;
+
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private BlockDao blockDao;
+
+    @Autowired
+    private HistoryDao historyDao;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private Validator validator;
 
     // Get
 

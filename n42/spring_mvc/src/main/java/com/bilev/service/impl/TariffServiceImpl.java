@@ -35,24 +35,21 @@ import java.util.Set;
 @Service("tariffService")
 public class TariffServiceImpl implements TariffService, ServiceErrors {
 
-    private final TariffDao tariffDao;
-
-    private final OptionDao optionDao;
-
-    private final ContractDao contractDao;
-
-    private final ModelMapper modelMapper;
-
-    private final Validator validator;
+    @Autowired
+    private TariffDao tariffDao;
 
     @Autowired
-    public TariffServiceImpl(TariffDao tariffDao, OptionDao optionDao, ContractDao contractDao, ModelMapper modelMapper, Validator validator) {
-        this.tariffDao = tariffDao;
-        this.optionDao = optionDao;
-        this.contractDao = contractDao;
-        this.modelMapper = modelMapper;
-        this.validator = validator;
-    }
+    private OptionDao optionDao;
+
+    @Autowired
+    private ContractDao contractDao;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private Validator validator;
+
 
     private TariffDto getTariffDto (Tariff tariff) {
         TariffDto tariffDto = new TariffDto();

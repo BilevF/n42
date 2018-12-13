@@ -46,7 +46,7 @@ public class LoggerAspect {
             throwing="exec")
     public void catchAllException(Exception exec) {
 
-        System.out.println("Exception has been caught : " + exec);
-        System.out.println("Message : " + exec.getMessage());
+        LOG.error("Exception has been caught : " + exec);
+        LOG.error("Message : " + exec.getMessage());
     }
 }

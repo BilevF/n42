@@ -28,16 +28,11 @@ import java.util.Set;
 @RequestMapping("/rest/tariff")
 public class TariffRestController {
 
-    private final TariffService tariffService;
-    private final MessageService messageService;
-
+    @Autowired
+    private TariffService tariffService;
 
     @Autowired
-    public TariffRestController(TariffService tariffService, MessageService messageService) {
-        this.tariffService = tariffService;
-        this.messageService = messageService;
-    }
-
+    private MessageService messageService;
 
     @PostMapping
     public Integer addTariff(@RequestBody @Valid BasicTariffDto tariff) throws OperationFailed {

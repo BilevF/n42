@@ -20,10 +20,10 @@ INSERT INTO USER (FIRST_NAME, LAST_NAME, BIRTH_DATE, PASSPORT, ADDRESS, EMAIL, P
 VALUES ('Fedor', 'Bilev', '1996-03-16', '4016', 'Russia, Spb', 'admin@mail.ru', '356a192b7913b04c54574d18c28d46e6395428ab', '0', 2);
 
 INSERT INTO TARIFF (NAME, PRICE, INFO, VALID) 
-VALUES ('Black', '100', '$5/Gb, $0.5/min, $0.5/sms', true);
+VALUES ('Black', '50', '₽5/Gb, ₽0.5/min, ₽0.5/sms', true);
 
 INSERT INTO TARIFF (NAME, PRICE, INFO, VALID) 
-VALUES ('White', '200', '$2/Gb, $0.2/min, $0.2/sms ', true);
+VALUES ('White', '100', '₽2/Gb, ₽0.2/min, ₽0.2/sms ', true);
 
 INSERT INTO CONTRACT (USER_ID, TARIFF_ID, PHONE_NUMBER, BLOCK_ID)
-VALUES ('1', '2', '895014', 1);
+VALUES ('1', '2', '8(950)012-90-90', 1);

@@ -30,19 +30,14 @@ import java.security.Principal;
 @RequestMapping("/rest/user")
 public class UserRestController {
 
-    private final UserService userService;
-
-    private final SecurityService securityService;
-
-    private final MailService mailService;
+    @Autowired
+    private UserService userService;
 
     @Autowired
-    public UserRestController(UserService userService, SecurityService securityService, MailService mailService) {
-        this.userService = userService;
-        this.securityService = securityService;
-        this.mailService = mailService;
-    }
+    private SecurityService securityService;
 
+    @Autowired
+    private MailService mailService;
 
 
     @PostMapping

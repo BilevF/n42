@@ -1,8 +1,7 @@
-package com.bilev.bean;
+package com.ee.bilev.service;
 
-import com.bilev.qualifier.OnMessage;
+import com.ee.bilev.qualifier.OnMessage;
 
-import javax.annotation.ManagedBean;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
 import javax.enterprise.event.Event;
@@ -18,7 +17,7 @@ import javax.jms.MessageListener;
 
         @ActivationConfigProperty(propertyName = "destination", propertyValue = "activemq/queue/TestQueue") })
 @Named
-public class MessageBean implements MessageListener, java.io.Serializable {
+public class MessageEventBean implements MessageListener, java.io.Serializable {
 
     @Inject
     @OnMessage
@@ -27,7 +26,6 @@ public class MessageBean implements MessageListener, java.io.Serializable {
     @Override
     public void onMessage(Message message) {
         updated.fire(true);
-        System.out.println("onMessage!!!!!!!!!!!!!!!!!11");
     }
 
 }

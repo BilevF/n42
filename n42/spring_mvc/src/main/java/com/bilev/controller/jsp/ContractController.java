@@ -31,16 +31,12 @@ import java.util.Collection;
 @RequestMapping("/contract")
 public class ContractController {
 
-    private final ContractService contractService;
-
-    private final TariffService tariffService;
-
+    @Autowired
+    private ContractService contractService;
 
     @Autowired
-    public ContractController(ContractService contractService, TariffService tariffService) {
-        this.contractService = contractService;
-        this.tariffService = tariffService;
-    }
+    private TariffService tariffService;
+
 
     @ExceptionHandler(Exception.class)
     public ModelAndView exceptionHandler(final Exception e) {

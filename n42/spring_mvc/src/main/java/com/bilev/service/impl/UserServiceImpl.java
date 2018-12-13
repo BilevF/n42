@@ -34,31 +34,26 @@ import java.util.List;
 @Service("userService")
 public class UserServiceImpl implements UserService, ServiceErrors {
 
-    private final UserDao userDao;
-
-    private final RoleDao roleDao;
-
-    private final ModelMapper modelMapper;
-
-    private final ContractDao contractDao;
-
-    private final HistoryDao historyDao;
-
-    private final ShaPasswordEncoder passwordEncoder;
-
-    private final Validator validator;
+    @Autowired
+    private UserDao userDao;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, RoleDao roleDao, ModelMapper modelMapper, ContractDao contractDao,
-                           ShaPasswordEncoder passwordEncoder, Validator validator, HistoryDao historyDao) {
-        this.userDao = userDao;
-        this.roleDao = roleDao;
-        this.modelMapper = modelMapper;
-        this.contractDao = contractDao;
-        this.passwordEncoder = passwordEncoder;
-        this.validator = validator;
-        this.historyDao = historyDao;
-    }
+    private RoleDao roleDao;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private ContractDao contractDao;
+
+    @Autowired
+    private HistoryDao historyDao;
+
+    @Autowired
+    private ShaPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private Validator validator;
 
     @Override
     @Transactional(readOnly = true)

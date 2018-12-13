@@ -16,17 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("mailService")
 public class MailServiceImpl implements MailService, ServiceErrors {
 
-    private final JavaMailSender mailSender;
-
-    private final UserDao userDao;
-
-    private final String newPwdLink = "http://localhost:8080/n42/newPassword?";
+    @Autowired
+    private JavaMailSender mailSender;
 
     @Autowired
-    public MailServiceImpl(JavaMailSender mailSender, UserDao userDao) {
-        this.mailSender = mailSender;
-        this.userDao = userDao;
-    }
+    private UserDao userDao;
+
+    private final String newPwdLink = "http://localhost:8181/n42/newPassword?";
+
 
     @Override
     @Transactional(readOnly = true)

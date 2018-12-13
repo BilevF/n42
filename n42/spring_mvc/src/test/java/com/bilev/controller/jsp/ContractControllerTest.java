@@ -132,8 +132,16 @@ public class ContractControllerTest {
                 tariffDao.getByKey(2),
                 BasicTariffDto.class);
 
+        UsernamePasswordAuthenticationToken principal =
+                this.getPrincipal("admin");
 
-        mockMvc.perform(get("/contract/new").param("userId", "1").principal(getPrincipal("admin")))
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute(
+                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                new MockSecurityContext(principal));
+
+
+        mockMvc.perform(get("/contract/new").param("userId", "1").session(session))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("tariffs", hasItem(tariff1)))
                 .andExpect(model().attribute("tariffs", hasItem(tariff2)))

@@ -1,9 +1,9 @@
-package com.bilev.bean;
+package com.ee.bilev.controller;
 
-import com.bilev.dto.BasicTariffDto;
-import com.bilev.ejb.TariffsEJB;
+import com.ee.bilev.dto.BasicTariffDto;
+import com.ee.bilev.service.TariffsEJB;
 
-import com.bilev.qualifier.OnReload;
+import com.ee.bilev.qualifier.OnReload;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -24,7 +24,7 @@ import java.util.Collection;
 public class HomePageBean implements java.io.Serializable {
 
     @Inject
-    private TariffsEJB helloEJB;
+    private TariffsEJB tariffEJB;
 
     @Inject
     @Push(channel = "tariffChannel")
@@ -32,13 +32,13 @@ public class HomePageBean implements java.io.Serializable {
 
 
     public Collection<BasicTariffDto> getTariffs() {
-        return helloEJB.getTariffs();
+        return tariffEJB.getTariffs();
 
     }
 
     public void observeEvent(@Observes @OnReload Boolean message){
+        System.out.println("observeEvent");
         tariffChannel.send(true);
-        System.out.println("observeEvent!!!!!!!!!!!!!!!!!11");
     }
 
 }

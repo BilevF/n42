@@ -1,4 +1,4 @@
-package com.bilev.qualifier;
+package com.ee.bilev.qualifier;
 
 import javax.inject.Qualifier;
 import java.lang.annotation.ElementType;

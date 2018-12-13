@@ -43,7 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET,
-                        "/account", "/contract", "/contract/update", "/contract/basket" ,
+                        "/contract", "/contract/update", "/contract/basket" ,
                         "/contract/tariff/change", "/contract/history", "/user/update", "/user/money")
                 .access("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
 

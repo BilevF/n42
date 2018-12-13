@@ -31,12 +31,9 @@ import javax.validation.Valid;
 @RequestMapping("/rest/contract")
 public class ContractRestController {
 
-    private final ContractService contractService;
-
     @Autowired
-    public ContractRestController(ContractService contractService) {
-        this.contractService = contractService;
-    }
+    private ContractService contractService;
+
 
     @PostMapping
     public int addContract(@RequestBody @Valid BasicContractDto contract) throws OperationFailed {

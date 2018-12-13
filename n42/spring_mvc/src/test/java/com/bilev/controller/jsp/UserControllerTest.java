@@ -81,7 +81,7 @@ public class UserControllerTest {
 
         mockMvc.perform(get("/user/new").principal(getPrincipal("admin")))
                 .andExpect(status().isOk())
-                .andExpect(view().name("editUser"));
+                .andExpect(view().name("createUser"));
     }
 
     @Test
@@ -110,9 +110,9 @@ public class UserControllerTest {
     public void testUserListPage() throws Exception {
 
 
-        BasicUserDto res = modelMapper.map(
+        UserDto res = modelMapper.map(
                 userDao.getByKey(1),
-                BasicUserDto.class);
+                UserDto.class);
 
         mockMvc.perform(get("/user/list").principal(getPrincipal("admin")))
                 .andExpect(status().isOk())

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import java.security.Principal;
 
 @Controller
-@SessionAttributes("roles")
 public class LoginController {
 
     @Autowired

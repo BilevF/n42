@@ -1,4 +1,4 @@
-package com.bilev.dto;
+package com.ee.bilev.dto;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

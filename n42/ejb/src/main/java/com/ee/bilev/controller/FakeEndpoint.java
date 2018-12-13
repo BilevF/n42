@@ -1,4 +1,4 @@
-package com.bilev.bean;
+package com.ee.bilev.controller;
 
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;

@@ -22,7 +22,7 @@
         <jstl.version>1.2</jstl.version>
         <modelmapper.version>0.7.4</modelmapper.version>
 
-        <wildfly-maven-plugin.version>1.2.1.Final</wildfly-maven-plugin.version>
+        <wildfly-maven-plugin.version>2.0.0.Final</wildfly-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -236,10 +236,10 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>2.4</version>
+                    <version>3.2.0</version>
                     <configuration>
                         <warSourceDirectory>src/main/webapp</warSourceDirectory>
-                        <warName>SpringHibernateExample</warName>
+                        <warName>WarApp1</warName>
                         <failOnMissingWebXml>false</failOnMissingWebXml>
                     </configuration>
                 </plugin>
@@ -248,14 +248,17 @@
                     <artifactId>wildfly-maven-plugin</artifactId>
                     <version>${wildfly-maven-plugin.version}</version>
                     <configuration>
+                        <hostname>localhost</hostname>
+                        <port>9990</port>
+                        <filename>WarApp1.war</filename>
                         <server-args>
-                            <server-arg>-Djboss.http.port=8080</server-arg>
+                            <server-arg>-Djboss.http.port=8181</server-arg>
                         </server-args>
                     </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
-        <finalName>SpringHibernateExample</finalName>
+        <finalName>WarApp1</finalName>
     </build>
 
 </project>

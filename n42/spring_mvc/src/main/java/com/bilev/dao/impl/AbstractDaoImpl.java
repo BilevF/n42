@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import java.lang.reflect.ParameterizedType;
 
+import com.bilev.dao.api.AbstractDao;
 import com.bilev.exception.dao.UnableToRemoveException;
 import com.bilev.exception.dao.UnableToFindException;
 import com.bilev.exception.dao.UnableToSaveException;
@@ -13,7 +14,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractDaoImpl<PK extends Serializable, T> {
+public abstract class AbstractDaoImpl<PK extends Serializable, T> implements AbstractDao<PK, T> {
 
     private final Class<T> persistentClass;
 

@@ -23,9 +23,9 @@
             <input type="hidden" name="formcomment" value="N42: top up ${user.firstName}'s account">
             <input type="hidden" name="short-dest" value="N42: Top up ${user.firstName}'s account">
             <input type="hidden" name="quickpay-form" value="shop">
-            <input type="hidden" name="targets" value="Top up account">
+            <input type="hidden" name="targets" value="Top up account #${user.id}">
             <input type="hidden" name="label" value="${user.id}">
-            <input type="hidden" name="successURL" value="http://localhost:8080/n42/account">
+            <input type="hidden" name="successURL" value="http://localhost:8181/n42/account">
 
 
             <div class="row">
