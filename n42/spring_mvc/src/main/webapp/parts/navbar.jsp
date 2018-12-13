@@ -73,7 +73,7 @@
                 <c:choose>
 
                 <c:when test = "${param.contentType == 'contract'}">
-                    <form name="contract" action="contract/history"  method="get" style="display: inline;">
+                    <form name="history" action="contract/history"  method="get" style="display: inline;">
                         <input name="contractId" type="hidden" value="${param.contractId}">
                         <button type="submit" class="menu-button">History</button>
                     </form>
@@ -139,10 +139,7 @@
                     </c:when>
 
                     <c:when test = "${param.contentType == 'account'}">
-                        <form name="number" action="user/money" method="get" style="display: inline;">
-                            <input name="userId" type="hidden" value="${param.userId}">
-                            <button type="submit" class="menu-button">Top up account</button>
-                        </form>
+                        <button  name="money" onclick="window.location.href = 'user/money?userId=${param.userId}'" type="button" class="menu-button" >Top up account</button>
                     </c:when>
 
                 </c:choose>
@@ -176,7 +173,7 @@
 
                     <div id="showContent" class="hidden" style="display: inline;">
 
-                        <form name="contract" action="contract/history"  method="get" style="display: inline;">
+                        <form name="history" action="contract/history"  method="get" style="display: inline;">
                             <input name="contractId" type="hidden" value="${param.contractId}">
                             <button type="submit" class="menu-button">History</button>
                         </form>
@@ -196,6 +193,8 @@
 
         <div class="ml-auto p-2"  style="display: inline;">
             <sec:authorize access="hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')">
+                <a onclick="rec()" class='btn btn-link' role='button'><span class='	glyphicon glyphicon-ice-lolly'></span></a>
+
                 <a class="btn btn-primary" href="logout">Logout</a>
             </sec:authorize>
             <sec:authorize access="!(hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT'))">

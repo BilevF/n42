@@ -12,7 +12,7 @@
 
     <jsp:include page="parts/welcom.jsp">
         <jsp:param name="name" value="${user.firstName} ${user.lastName}"/>
-        <jsp:param name="secondName" value="Balance: $${user.balance}"/>
+        <jsp:param name="secondName" value="Balance: ₽${user.balance}"/>
         <jsp:param name="message" value="<p>On this page you can add funds to your account</p>"/>
     </jsp:include>
 

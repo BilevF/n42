@@ -117,7 +117,7 @@ function onSpeach(word) {
 
         $("#showContent:not(."+hiddenClassName+") form[name=" + word + "]").find(':submit').trigger("click");
 
-        $("#findContent:not(."+hiddenClassName+") form[name=" + word + "]").find(':submit').trigger("click");
+        $("#selectContent:not(."+hiddenClassName+") form[name=" + word + "]").find(':submit').trigger("click");
 
     } catch (e) {
         console.error(e);
@@ -129,12 +129,17 @@ const SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammar
 const SpeechRecognitionEvent = window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent;
 
 const commands = {
-    найди: 'find',
-    найти: 'find',
+    активируй: 'block',
+    заблокируй: 'block',
     покажи: 'show',
     отобрази: 'show',
     создай: 'create',
     создать: 'create',
+    выбери: 'select',
+    выбирать: 'select',
+    выбрать: 'select',
+    пополни: 'money',
+
     пользователь: 'user',
     пользователя: 'user',
     клиент: 'user',
@@ -143,8 +148,15 @@ const commands = {
     пользователей: 'users',
     клиенты: 'users',
     клиентов: 'users',
+    контракт: 'contract',
     тариф: 'tariff',
-    тарифы: 'tariffs'
+    тарифы: 'tariffs',
+    опция: 'option',
+    опцию: 'option',
+    история: 'history',
+    историю: 'history',
+    номер: 'number',
+
 
 };
 
@@ -198,12 +210,21 @@ try {
 
     };
 
+    function rec() {
+        try {
+            recognition.start();
+        }
+        catch(e) {
+            console.error(e);
+        }
+    }
+
+
+
     // recognition.onspeechend = function() {
     //     recognition.start();
     // }
 }
 catch(e) {
     console.error(e);
-    $('.no-browser-support').show();
-    $('.app').hide();
 }
