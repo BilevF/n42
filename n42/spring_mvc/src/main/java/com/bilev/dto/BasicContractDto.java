@@ -19,7 +19,8 @@ public class BasicContractDto extends AbstractDto  {
     @NotNull(message = "{NotNull.contract.phoneNumber=Phone number can not be blank.}")
     @Size(min=3, max=45, message = "{Size.contract.phoneNumber}")
 //    @Digits(integer=45,fraction=0)
-    @Pattern(regexp = "[\\d][(][\\d][\\d][\\d][)][\\d][\\d][\\d][-][\\d][\\d][-][\\d][\\d]" , message = "{Pattern.contract.phoneNumber}")
+    @Pattern(regexp = "[\\d][(][\\d][\\d][\\d][)][\\d][\\d][\\d][-][\\d][\\d][-][\\d][\\d]" , message = "{Pattern.contract.ph" +
+            "oneNumber}")
     private String phoneNumber;
 
     private Block.BlockType blockType;
